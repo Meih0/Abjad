@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import Landing from './pages/Landing';
 import DigitalTwin from './pages/DigitalTwin';
 import Assets from './pages/Assets';
 import Tasks from './pages/Tasks';
@@ -566,22 +567,32 @@ function HomePage() {
   );
 }
 
+function AppContent() {
+  const location = useLocation();
+  const isLandingPage = location.pathname === '/' || location.pathname === '/Abjad' || location.pathname === '/Abjad/';
+
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: COLORS.clarity }}>
+      {!isLandingPage && <Navigation />}
+      <main className={!isLandingPage ? "lg:ml-64" : ""}>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/digital-twin" element={<DigitalTwin />} />
+          <Route path="/assets" element={<Assets />} />
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="*" element={<Landing />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
+
 function App() {
   return (
     <Router basename="/Abjad">
-      <div className="min-h-screen" style={{ backgroundColor: COLORS.clarity }}>
-        <Navigation />
-        <main className="lg:ml-64">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/digital-twin" element={<DigitalTwin />} />
-            <Route path="/assets" element={<Assets />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/marketplace" element={<Marketplace />} />
-            <Route path="*" element={<HomePage />} />
-          </Routes>
-        </main>
-      </div>
+      <AppContent />
     </Router>
   );
 }
