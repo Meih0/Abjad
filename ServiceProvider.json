@@ -1,0 +1,71 @@
+{
+  "name": "ServiceProvider",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "plumbing",
+        "electrical",
+        "hvac",
+        "cleaning",
+        "appliance_repair",
+        "pest_control",
+        "landscaping",
+        "painting",
+        "general_maintenance"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "base_price": {
+      "type": "number"
+    },
+    "price_unit": {
+      "type": "string",
+      "enum": [
+        "per_hour",
+        "per_visit",
+        "per_project"
+      ],
+      "default": "per_visit"
+    },
+    "rating": {
+      "type": "number"
+    },
+    "total_reviews": {
+      "type": "number"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "availability": {
+      "type": "string",
+      "enum": [
+        "available",
+        "busy",
+        "offline"
+      ],
+      "default": "available"
+    },
+    "response_time": {
+      "type": "string",
+      "description": "Average response time"
+    }
+  },
+  "required": [
+    "name",
+    "service_type",
+    "base_price"
+  ]
+}

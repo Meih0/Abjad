@@ -1,0 +1,81 @@
+{
+  "name": "Asset",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Asset/appliance name"
+    },
+    "asset_type": {
+      "type": "string",
+      "enum": [
+        "ac",
+        "fridge",
+        "washing_machine",
+        "dryer",
+        "dishwasher",
+        "oven",
+        "microwave",
+        "water_heater",
+        "hvac",
+        "furniture",
+        "electronics",
+        "other"
+      ]
+    },
+    "room_id": {
+      "type": "string",
+      "description": "Room where asset is located"
+    },
+    "purchase_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "warranty_expiry": {
+      "type": "string",
+      "format": "date"
+    },
+    "purchase_amount": {
+      "type": "number"
+    },
+    "vendor": {
+      "type": "string"
+    },
+    "receipt_url": {
+      "type": "string",
+      "description": "Uploaded receipt image URL"
+    },
+    "model_number": {
+      "type": "string"
+    },
+    "serial_number": {
+      "type": "string"
+    },
+    "maintenance_interval_days": {
+      "type": "number",
+      "description": "Days between maintenance"
+    },
+    "last_maintenance_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "next_maintenance_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "needs_maintenance",
+        "under_repair",
+        "replaced"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "name",
+    "asset_type"
+  ]
+}
