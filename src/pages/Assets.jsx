@@ -78,7 +78,7 @@ function ReceiptScanner({ onScanComplete, onClose }) {
           initial={{ scale: 0.9, y: 20 }}
           animate={{ scale: 1, y: 0 }}
           exit={{ scale: 0.9, y: 20 }}
-          className="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden"
+          className="bg-white rounded-3xl max-w-lg w-full mx-4 shadow-2xl max-h-[90vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="p-6">
@@ -99,7 +99,7 @@ function ReceiptScanner({ onScanComplete, onClose }) {
 
             {!preview ? (
               <label className="block">
-                <div className="border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer hover:border-transparent hover:shadow-lg transition-all"
+                <div className="border-2 border-dashed rounded-2xl p-6 md:p-12 text-center cursor-pointer hover:border-transparent hover:shadow-lg transition-all"
                   style={{ borderColor: COLORS.innovation, backgroundColor: `${COLORS.innovation}10` }}>
                   <Camera className="w-16 h-16 mx-auto mb-4" style={{ color: COLORS.growth }} />
                   <p className="font-semibold mb-2" style={{ color: COLORS.depth }}>Click to upload receipt</p>
@@ -311,7 +311,7 @@ export default function Assets() {
         transition={{ delay: 0.3 }}
       >
         <h2 className="text-xl font-bold mb-4" style={{ color: COLORS.depth }}>Your Assets</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {assets.map((asset, index) => {
             const category = ASSET_CATEGORIES[asset.category] || ASSET_CATEGORIES.other;
             const warranty = getWarrantyStatus(asset.warrantyExpiry);
@@ -325,7 +325,7 @@ export default function Assets() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="bg-white rounded-2xl p-5 border-0 hover:shadow-xl transition-all shadow-lg"
+                className="bg-white rounded-2xl p-5 border-0 hover:shadow-xl active:scale-[0.99] transition-all shadow-lg"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">

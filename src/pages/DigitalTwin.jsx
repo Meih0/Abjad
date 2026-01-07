@@ -108,7 +108,7 @@ function AddTaskModal({ room, onClose, onAdd }) {
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
-        className="bg-white rounded-3xl w-full max-w-md shadow-2xl"
+        className="bg-white rounded-3xl w-full max-w-md mx-4 shadow-2xl max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">
@@ -510,7 +510,7 @@ export default function DigitalTwin() {
           <svg
             viewBox="0 0 550 400"
             className="w-full max-w-3xl mx-auto"
-            style={{ minHeight: '400px' }}
+            style={{ aspectRatio: '550/400', maxHeight: '60vh' }}
           >
             {/* Floor boundary */}
             <rect
@@ -538,7 +538,7 @@ export default function DigitalTwin() {
                     stroke={COLORS.depth}
                     strokeWidth="2"
                     rx="12"
-                    className="cursor-pointer hover:opacity-80 transition-all"
+                    className="cursor-pointer hover:opacity-80 active:opacity-60 transition-opacity"
                     onClick={() => setSelectedRoom(room)}
                     style={{
                       filter: activeTasks > 0 ? `drop-shadow(0 0 12px ${COLORS.innovation})` : 'none'
@@ -549,9 +549,8 @@ export default function DigitalTwin() {
                     y={room.y + room.height / 2 - 5}
                     textAnchor="middle"
                     fill={activeTasks > 0 ? '#ffffff' : COLORS.depth}
-                    fontSize="14"
-                    fontWeight="700"
-                    className="pointer-events-none"
+                    className="pointer-events-none text-sm md:text-base font-bold"
+                    style={{ fontSize: '0.875rem' }}
                   >
                     {room.name}
                   </text>
@@ -560,9 +559,8 @@ export default function DigitalTwin() {
                     y={room.y + room.height / 2 + 15}
                     textAnchor="middle"
                     fill={activeTasks > 0 ? '#ffffff' : '#9ca3af'}
-                    fontSize="12"
-                    fontWeight="600"
-                    className="pointer-events-none"
+                    className="pointer-events-none text-xs md:text-sm font-semibold"
+                    style={{ fontSize: '0.75rem' }}
                   >
                     {activeTasks > 0 ? `${activeTasks} ${activeTasks === 1 ? 'task' : 'tasks'}` : 'No tasks'}
                   </text>

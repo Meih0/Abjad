@@ -155,7 +155,7 @@ function BookingModal({ service, onClose, onConfirm }) {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-white rounded-3xl max-w-lg w-full shadow-2xl"
+          className="bg-white rounded-3xl max-w-lg w-full mx-4 shadow-2xl max-h-[90vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="p-6 border-b border-gray-100">
@@ -368,30 +368,32 @@ export default function Marketplace() {
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
-        {categories.map((category) => (
-          <motion.button
-            key={category.id}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setFilter(category.id)}
-            className={`px-5 py-3 rounded-2xl whitespace-nowrap transition-all font-semibold shadow-md ${
-              filter === category.id
-                ? 'text-white'
-                : 'bg-white text-gray-700 hover:shadow-lg'
-            }`}
-            style={filter === category.id ? { backgroundColor: COLORS.growth } : {}}
-          >
-            {category.label}
-          </motion.button>
-        ))}
+      <div className="overflow-x-auto pb-2 mb-6 -mx-5 px-5">
+        <div className="flex gap-2 min-w-max md:min-w-0 md:flex-wrap">
+          {categories.map((category) => (
+            <motion.button
+              key={category.id}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setFilter(category.id)}
+              className={`snap-start px-5 py-3 rounded-2xl whitespace-nowrap transition-all font-semibold shadow-md active:scale-95 ${
+                filter === category.id
+                  ? 'text-white'
+                  : 'bg-white text-gray-700 hover:shadow-lg'
+              }`}
+              style={filter === category.id ? { backgroundColor: COLORS.growth } : {}}
+            >
+              {category.label}
+            </motion.button>
+          ))}
+        </div>
       </div>
 
       {/* Service Cards */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"
       >
         {filteredServices.map((service, index) => (
           <motion.div
@@ -399,7 +401,7 @@ export default function Marketplace() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
-            className="bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+            className="bg-white rounded-3xl shadow-lg hover:shadow-xl active:scale-[0.99] transition-all duration-300 overflow-hidden group"
           >
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">

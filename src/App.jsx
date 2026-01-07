@@ -210,7 +210,7 @@ function Navigation() {
                     />
                   )}
                 </div>
-                <span className={`text-[10px] font-semibold transition-colors ${
+                <span className={`text-xs font-medium mt-0.5 transition-colors ${
                   active ? '' : 'text-gray-400'
                 }`}
                 style={active ? { color: COLORS.depth } : {}}

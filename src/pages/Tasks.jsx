@@ -131,7 +131,7 @@ function AddTaskModal({ onClose, onAdd }) {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-white rounded-3xl max-w-lg w-full shadow-2xl"
+        className="bg-white rounded-3xl max-w-lg w-full mx-4 shadow-2xl max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6 border-b border-gray-100">
@@ -406,19 +406,21 @@ export default function Tasks() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex gap-2">
-            {['all', 'pending', 'in-progress', 'completed'].map((status) => (
-              <button
-                key={status}
-                onClick={() => setFilter(status)}
-                className={`px-4 py-3 rounded-xl font-semibold transition-all ${
-                  filter === status ? 'text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-                style={filter === status ? { backgroundColor: COLORS.growth } : {}}
-              >
-                {status === 'all' ? 'All' : status === 'in-progress' ? 'In Progress' : status.charAt(0).toUpperCase() + status.slice(1)}
-              </button>
-            ))}
+          <div className="overflow-x-auto pb-2 -mb-2">
+            <div className="flex gap-2 min-w-max md:min-w-0">
+              {['all', 'pending', 'in-progress', 'completed'].map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setFilter(status)}
+                  className={`snap-start px-4 py-3 rounded-xl font-semibold text-sm whitespace-nowrap transition-all duration-200 min-w-[100px] active:scale-95 ${
+                    filter === status ? 'text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                  style={filter === status ? { backgroundColor: COLORS.growth } : {}}
+                >
+                  {status === 'all' ? 'All' : status === 'in-progress' ? 'In Progress' : status.charAt(0).toUpperCase() + status.slice(1)}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -433,7 +435,7 @@ export default function Tasks() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -100 }}
               transition={{ delay: index * 0.05 }}
-              className={`bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all overflow-hidden ${
+              className={`bg-white rounded-3xl shadow-lg hover:shadow-xl active:scale-[0.99] transition-all overflow-hidden ${
                 task.status === 'completed' ? 'opacity-60' : ''
               }`}
             >

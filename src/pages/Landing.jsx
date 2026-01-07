@@ -139,7 +139,7 @@ function Landing() {
         </div>
 
         <div className="max-w-7xl mx-auto px-5 py-20 md:py-32 relative z-10 w-full">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Column - Logo and Text */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -222,7 +222,7 @@ function Landing() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="grid grid-cols-2 gap-6"
+              className="grid grid-cols-2 gap-3 md:gap-6"
             >
               {[
                 { value: 500, suffix: '+', label: 'Homes Managed', labelAr: 'منزل تحت الإدارة' },
@@ -235,7 +235,7 @@ function Landing() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                  className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300"
+                  className="bg-white/10 backdrop-blur-md rounded-3xl p-4 md:p-6 border border-white/20 hover:bg-white/15 transition-all duration-300"
                 >
                   <div className="text-4xl md:text-5xl font-bold mb-2" style={{ color: COLORS.innovation }}>
                     <AnimatedCounter end={stat.value} suffix={stat.suffix} />
@@ -262,7 +262,7 @@ function Landing() {
       {/* About Section */}
       <section className="py-20 md:py-28 bg-white">
         <div className="max-w-7xl mx-auto px-5">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -339,7 +339,7 @@ function Landing() {
             </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {coreValues.map((value, index) => (
               <motion.div
                 key={index}
@@ -391,7 +391,7 @@ function Landing() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
@@ -450,7 +450,7 @@ function Landing() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {methodology.map((step, index) => (
               <motion.div
                 key={index}
