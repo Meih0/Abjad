@@ -1,0 +1,55 @@
+{
+  "name": "Booking",
+  "type": "object",
+  "properties": {
+    "provider_id": {
+      "type": "string"
+    },
+    "provider_name": {
+      "type": "string"
+    },
+    "service_type": {
+      "type": "string"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "scheduled_time": {
+      "type": "string"
+    },
+    "room_id": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "total_amount": {
+      "type": "number"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "refunded"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "provider_id",
+    "scheduled_date"
+  ]
+}
