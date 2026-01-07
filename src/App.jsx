@@ -87,10 +87,10 @@ function Navigation() {
                 {/* Sidebar Header */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-100">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: COLORS.growth }}>
-                      <Home className="h-5 w-5 text-white" />
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
+                      <img src="/Abjad/images/Abjad Logo.png" alt="Abjad" className="w-full h-full object-contain" />
                     </div>
-                    <span className="font-bold" style={{ color: COLORS.depth }}>Home Twin</span>
+                    <span className="font-bold" style={{ color: COLORS.depth }}>Abjad</span>
                   </div>
                   <button
                     onClick={() => setMobileMenuOpen(false)}
@@ -143,10 +143,10 @@ function Navigation() {
       <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-100 flex-col z-30">
         {/* Logo */}
         <div className="flex items-center gap-3 p-6 border-b border-gray-100">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: COLORS.growth }}>
-            <Home className="h-5 w-5 text-white" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
+            <img src="/Abjad/images/Abjad Logo.png" alt="Abjad" className="w-full h-full object-contain" />
           </div>
-          <span className="font-bold text-lg" style={{ color: COLORS.depth }}>Home Twin</span>
+          <span className="font-bold text-lg" style={{ color: COLORS.depth }}>Abjad</span>
         </div>
 
         {/* Nav Items */}
