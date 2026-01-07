@@ -1,0 +1,80 @@
+{
+  "name": "Task",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "task_type": {
+      "type": "string",
+      "enum": [
+        "cleaning",
+        "maintenance",
+        "repair",
+        "inspection",
+        "delivery",
+        "other"
+      ]
+    },
+    "room_id": {
+      "type": "string",
+      "description": "Associated room ID"
+    },
+    "asset_id": {
+      "type": "string",
+      "description": "Associated asset ID if applicable"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Email of assigned worker"
+    },
+    "assigned_name": {
+      "type": "string",
+      "description": "Name of assigned worker"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "title",
+    "task_type"
+  ]
+}
