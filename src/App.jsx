@@ -21,7 +21,7 @@ function Navigation() {
   const location = useLocation();
 
   const navItems = [
-    { path: '/', icon: Home, label: 'Home' },
+    { path: '/home', icon: Home, label: 'Home' },
     { path: '/digital-twin', icon: Map, label: 'Digital Twin' },
     { path: '/assets', icon: Package, label: 'Assets' },
     { path: '/tasks', icon: ClipboardList, label: 'Tasks' },
@@ -569,7 +569,7 @@ function HomePage() {
 
 function AppContent() {
   const location = useLocation();
-  const isLandingPage = location.pathname === '/' || location.pathname === '/Abjad' || location.pathname === '/Abjad/';
+  const isLandingPage = location.pathname === '/';
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: COLORS.clarity }}>
@@ -582,7 +582,7 @@ function AppContent() {
           <Route path="/assets" element={<Assets />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="*" element={<Landing />} />
+          <Route path="*" element={<HomePage />} />
         </Routes>
       </main>
     </div>
