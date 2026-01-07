@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, X, User, Clock, Plus, CheckCircle, Wrench, Sparkles } from 'lucide-react';
+import { Home, X, User, Clock, Plus, CheckCircle, Wrench, Sparkles, ClipboardList } from 'lucide-react';
 
 // Hawaz Brand Colors
 const COLORS = {

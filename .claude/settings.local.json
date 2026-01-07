@@ -13,7 +13,8 @@
       "Bash(taskkill:*)",
       "Bash(npm uninstall:*)",
       "Bash(npm run deploy:*)",
-      "Bash(git ls-tree:*)"
+      "Bash(git ls-tree:*)",
+      "Bash(timeout /t 3)"
     ]
   }
 }
