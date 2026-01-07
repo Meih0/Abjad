@@ -11,13 +11,68 @@ const COLORS = {
   strategy: '#F47D42'
 };
 
-// Room data with coordinates and status
+// Room data with coordinates and status - with example tasks
 const initialRooms = [
-  { id: 1, name: 'Living Room', x: 50, y: 50, width: 200, height: 150, status: 'active', tasks: [] },
-  { id: 2, name: 'Kitchen', x: 270, y: 50, width: 180, height: 150, status: 'pending', tasks: [] },
-  { id: 3, name: 'Bedroom 1', x: 50, y: 220, width: 150, height: 130, status: 'normal', tasks: [] },
-  { id: 4, name: 'Bedroom 2', x: 220, y: 220, width: 150, height: 130, status: 'active', tasks: [] },
-  { id: 5, name: 'Bathroom', x: 390, y: 220, width: 100, height: 130, status: 'normal', tasks: [] },
+  {
+    id: 1,
+    name: 'Living Room',
+    x: 50,
+    y: 50,
+    width: 200,
+    height: 150,
+    status: 'active',
+    tasks: [
+      { id: 101, title: 'Clean AC filters', type: 'cleaning', assignee: 'CleanPro Services', estimatedTime: '30 mins', status: 'pending', createdAt: '2024-01-08T10:00:00Z' },
+      { id: 102, title: 'Vacuum carpet', type: 'cleaning', assignee: 'Maid Service', estimatedTime: '45 mins', status: 'in-progress', createdAt: '2024-01-08T09:00:00Z' }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Kitchen',
+    x: 270,
+    y: 50,
+    width: 180,
+    height: 150,
+    status: 'active',
+    tasks: [
+      { id: 201, title: 'Fix leaking faucet', type: 'maintenance', assignee: 'HandyFix Pro', estimatedTime: '1 hour', status: 'pending', createdAt: '2024-01-08T08:30:00Z' },
+      { id: 202, title: 'Deep clean countertops', type: 'cleaning', assignee: 'CleanPro Services', estimatedTime: '20 mins', status: 'completed', createdAt: '2024-01-07T14:00:00Z' }
+    ]
+  },
+  {
+    id: 3,
+    name: 'Bedroom 1',
+    x: 50,
+    y: 220,
+    width: 150,
+    height: 130,
+    status: 'normal',
+    tasks: [
+      { id: 301, title: 'Organize closet', type: 'cleaning', assignee: 'Home Organizer', estimatedTime: '2 hours', status: 'completed', createdAt: '2024-01-06T10:00:00Z' }
+    ]
+  },
+  {
+    id: 4,
+    name: 'Bedroom 2',
+    x: 220,
+    y: 220,
+    width: 150,
+    height: 130,
+    status: 'active',
+    tasks: [
+      { id: 401, title: 'Replace light bulb', type: 'maintenance', assignee: 'Electrician', estimatedTime: '15 mins', status: 'pending', createdAt: '2024-01-08T11:00:00Z' }
+    ]
+  },
+  {
+    id: 5,
+    name: 'Bathroom',
+    x: 390,
+    y: 220,
+    width: 100,
+    height: 130,
+    status: 'normal',
+    tasks: []
+  },
 ];
 
 function AddTaskModal({ room, onClose, onAdd }) {
@@ -344,6 +399,12 @@ export default function DigitalTwin() {
 
   const selectedRoomData = selectedRoom ? rooms.find(r => r.id === selectedRoom.id) : null;
 
+  // Calculate stats
+  const totalTasks = rooms.reduce((sum, room) => sum + room.tasks.length, 0);
+  const activeTasks = rooms.reduce((sum, room) => sum + room.tasks.filter(t => t.status !== 'completed').length, 0);
+  const completedTasks = rooms.reduce((sum, room) => sum + room.tasks.filter(t => t.status === 'completed').length, 0);
+  const activeRooms = rooms.filter(room => room.tasks.some(t => t.status !== 'completed')).length;
+
   return (
     <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8" style={{ backgroundColor: COLORS.clarity }}>
       {/* Header */}
@@ -355,6 +416,69 @@ export default function DigitalTwin() {
         <h1 className="text-3xl font-bold mb-2" style={{ color: COLORS.depth }}>Digital Twin</h1>
         <p className="text-gray-600">Interactive floor plan of your home</p>
       </motion.div>
+
+      {/* Mini Dashboard */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1 }}
+          className="bg-white rounded-2xl p-4 shadow-lg border-0"
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${COLORS.growth}20` }}>
+              <Home className="w-5 h-5" style={{ color: COLORS.growth }} />
+            </div>
+          </div>
+          <p className="text-2xl font-bold" style={{ color: COLORS.depth }}>{rooms.length}</p>
+          <p className="text-xs text-gray-600 font-medium">Total Rooms</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.15 }}
+          className="bg-white rounded-2xl p-4 shadow-lg border-0"
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${COLORS.innovation}20` }}>
+              <ClipboardList className="w-5 h-5" style={{ color: COLORS.growth }} />
+            </div>
+          </div>
+          <p className="text-2xl font-bold" style={{ color: COLORS.depth }}>{activeTasks}</p>
+          <p className="text-xs text-gray-600 font-medium">Active Tasks</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white rounded-2xl p-4 shadow-lg border-0"
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-green-100">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+            </div>
+          </div>
+          <p className="text-2xl font-bold" style={{ color: COLORS.depth }}>{completedTasks}</p>
+          <p className="text-xs text-gray-600 font-medium">Completed</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.25 }}
+          className="bg-white rounded-2xl p-4 shadow-lg border-0"
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${COLORS.strategy}20` }}>
+              <Wrench className="w-5 h-5" style={{ color: COLORS.strategy }} />
+            </div>
+          </div>
+          <p className="text-2xl font-bold" style={{ color: COLORS.depth }}>{activeRooms}</p>
+          <p className="text-xs text-gray-600 font-medium">Active Rooms</p>
+        </motion.div>
+      </div>
 
       {/* Legend */}
       <motion.div
