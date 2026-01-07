@@ -5,7 +5,14 @@
       "Bash(npm run dev:*)",
       "Bash(curl:*)",
       "Bash(git checkout:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(git restore:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(pkill:*)",
+      "Bash(taskkill:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm run deploy:*)"
     ]
   }
 }
