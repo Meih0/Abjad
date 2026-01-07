@@ -1,0 +1,247 @@
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import { motion } from 'framer-motion';
+import { Home, Plus, Settings, Layers } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import FloorPlanSVG from '@/components/floorplan/FloorPlanSVG';
+import RoomBottomSheet from '@/components/floorplan/RoomBottomSheet';
+
+// Default floor plan layout if no rooms exist
+const DEFAULT_ROOMS = [
+  { name: 'Living Room', room_type: 'living_room', floor: 1, coordinates: { x: 50, y: 50, width: 250, height: 200 } },
+  { name: 'Kitchen', room_type: 'kitchen', floor: 1, coordinates: { x: 310, y: 50, width: 180, height: 150 } },
+  { name: 'Master Bedroom', room_type: 'bedroom', floor: 1, coordinates: { x: 500, y: 50, width: 200, height: 180 } },
+  { name: 'Bathroom', room_type: 'bathroom', floor: 1, coordinates: { x: 310, y: 210, width: 120, height: 120 } },
+  { name: 'Office', room_type: 'office', floor: 1, coordinates: { x: 50, y: 260, width: 150, height: 140 } },
+  { name: 'Bedroom 2', room_type: 'bedroom', floor: 1, coordinates: { x: 500, y: 240, width: 160, height: 140 } },
+  { name: 'Garage', room_type: 'garage', floor: 1, coordinates: { x: 50, y: 410, width: 200, height: 130 } },
+  { name: 'Laundry', room_type: 'laundry', floor: 1, coordinates: { x: 260, y: 410, width: 120, height: 100 } },
+];
+
+export default function DigitalTwin() {
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [showBottomSheet, setShowBottomSheet] = useState(false);
+  const [selectedFloor, setSelectedFloor] = useState('1');
+  const queryClient = useQueryClient();
+
+  const { data: rooms = [], isLoading: roomsLoading } = useQuery({
+    queryKey: ['rooms'],
+    queryFn: () => base44.entities.Room.list()
+  });
+
+  const { data: tasks = [] } = useQuery({
+    queryKey: ['tasks'],
+    queryFn: () => base44.entities.Task.list()
+  });
+
+  const createRoomsMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.Room.bulkCreate(DEFAULT_ROOMS);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['rooms']);
+    }
+  });
+
+  const handleRoomClick = (room) => {
+    setSelectedRoom(room);
+    setShowBottomSheet(true);
+  };
+
+  const handleTaskAction = (action, room) => {
+    if (action === 'add') {
+      // Navigate to task creation or open modal
+      console.log('Add task for room:', room.id);
+    }
+  };
+
+  // Filter rooms by floor
+  const displayRooms = rooms.length > 0 
+    ? rooms.filter(r => (r.floor || 1).toString() === selectedFloor)
+    : [];
+
+  // Get unique floors
+  const floors = [...new Set(rooms.map(r => r.floor || 1))].sort();
+
+  // Task stats
+  const activeTaskCount = tasks.filter(t => ['pending', 'in_progress'].includes(t.status)).length;
+  const roomsWithTasks = new Set(tasks.filter(t => t.status !== 'completed').map(t => t.room_id)).size;
+
+  return (
+    <div className="min-h-screen bg-[#FEF5E8]">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-5 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 bg-[#005143] rounded-2xl flex items-center justify-center shadow-lg">
+                <Home className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Digital Twin</h1>
+                <p className="text-sm text-gray-500 font-medium">Interactive Floor Plan</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              {floors.length > 1 && (
+                <Select value={selectedFloor} onValueChange={setSelectedFloor}>
+                  <SelectTrigger className="w-32">
+                    <Layers className="h-4 w-4 mr-2" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {floors.map(floor => (
+                      <SelectItem key={floor} value={floor.toString()}>
+                        Floor {floor}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+              <Button variant="outline" size="icon">
+                <Settings className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Stats Bar */}
+      <div className="bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center gap-6 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-green-500" />
+              <span className="text-gray-600">{rooms.length} Rooms</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+              <span className="text-gray-600">{activeTaskCount} Active Tasks</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-amber-500" />
+              <span className="text-gray-600">{roomsWithTasks} Rooms Need Attention</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-5 py-6">
+        {roomsLoading ? (
+          <div className="bg-white rounded-2xl p-8 text-center">
+            <div className="animate-pulse">
+              <div className="h-64 bg-gray-100 rounded-xl" />
+            </div>
+          </div>
+        ) : rooms.length === 0 ? (
+          /* Empty State - Create Default Rooms */
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl p-12 text-center"
+          >
+            <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <Home className="h-10 w-10 text-gray-400" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Your Home Map</h2>
+            <p className="text-gray-500 mb-6 max-w-md mx-auto">
+              Get started by creating a default floor plan. You can customize rooms later.
+            </p>
+            <Button 
+              size="lg"
+              className="bg-gray-900 hover:bg-gray-800"
+              onClick={() => createRoomsMutation.mutate()}
+              disabled={createRoomsMutation.isPending}
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              Create Default Floor Plan
+            </Button>
+          </motion.div>
+        ) : (
+          /* Floor Plan SVG */
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-white rounded-3xl shadow-xl border-0 overflow-hidden"
+          >
+            <div className="p-4 border-b border-gray-100">
+              <h2 className="font-semibold text-gray-900">
+                Floor {selectedFloor} • {displayRooms.length} rooms
+              </h2>
+            </div>
+            <div className="p-4">
+              <FloorPlanSVG
+                rooms={displayRooms}
+                tasks={tasks}
+                onRoomClick={handleRoomClick}
+                selectedRoomId={selectedRoom?.id}
+              />
+            </div>
+          </motion.div>
+        )}
+
+        {/* Quick Stats Cards */}
+        {rooms.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-xl p-4 border border-gray-100"
+            >
+              <p className="text-sm text-gray-500">Total Rooms</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">{rooms.length}</p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="bg-white rounded-xl p-4 border border-gray-100"
+            >
+              <p className="text-sm text-gray-500">Active Tasks</p>
+              <p className="text-2xl font-bold text-orange-600 mt-1">{activeTaskCount}</p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-xl p-4 border border-gray-100"
+            >
+              <p className="text-sm text-gray-500">Cleaning</p>
+              <p className="text-2xl font-bold text-green-600 mt-1">
+                {rooms.filter(r => r.status === 'cleaning').length}
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className="bg-white rounded-xl p-4 border border-gray-100"
+            >
+              <p className="text-sm text-gray-500">Maintenance</p>
+              <p className="text-2xl font-bold text-amber-600 mt-1">
+                {rooms.filter(r => r.status === 'maintenance').length}
+              </p>
+            </motion.div>
+          </div>
+        )}
+      </main>
+
+      {/* Bottom Sheet for Room Details */}
+      <RoomBottomSheet
+        room={selectedRoom}
+        tasks={tasks}
+        isOpen={showBottomSheet}
+        onClose={() => {
+          setShowBottomSheet(false);
+          setSelectedRoom(null);
+        }}
+        onTaskAction={handleTaskAction}
+      />
+    </div>
+  );
+}
