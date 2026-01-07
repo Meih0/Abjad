@@ -17,20 +17,31 @@ import {
 import { Button } from '@/components/ui/button';
 
 const NAV_ITEMS = [
-  { name: 'Home', page: 'Home', icon: Home },
-  { name: 'Digital Twin', page: 'DigitalTwin', icon: Map },
-  { name: 'My Tasks', page: 'MyTasks', icon: ClipboardList },
-  { name: 'Assets', page: 'Assets', icon: Package },
-  { name: 'Marketplace', page: 'Marketplace', icon: Store },
+  { name: 'Home', path: '/home', icon: Home },
+  { name: 'Digital Twin', path: '/digital-twin', icon: Map },
+  { name: 'My Tasks', path: '/my-tasks', icon: ClipboardList },
+  { name: 'Assets', path: '/assets', icon: Package },
+  { name: 'Marketplace', path: '/marketplace', icon: Store },
 ];
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState({
+    name: 'Demo User',
+    email: 'demo@hometwin.com'
+  });
   const location = useLocation();
 
   useEffect(() => {
-    base44.auth.me().then(setCurrentUser).catch(() => {});
+    // Try to get Base44 user if available, otherwise use demo user
+    if (typeof base44 !== 'undefined' && base44.auth) {
+      base44.auth.me()
+        .then(setCurrentUser)
+        .catch(() => {
+          // Keep demo user if Base44 fails
+          console.log('Running in demo mode without Base44');
+        });
+    }
   }, []);
 
   const handleLogout = () => {
@@ -115,15 +126,15 @@ export default function Layout({ children, currentPageName }) {
                 {/* Nav Items */}
                 <nav className="flex-1 p-4 space-y-1">
                   {NAV_ITEMS.map((item) => {
-                    const isActive = currentPageName === item.page;
+                    const isActive = location.pathname === item.path;
                     return (
                       <Link
-                        key={item.page}
-                        to={createPageUrl(item.page)}
+                        key={item.path}
+                        to={item.path}
                         onClick={() => setSidebarOpen(false)}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                          isActive 
-                            ? 'bg-gray-900 text-white' 
+                          isActive
+                            ? 'bg-gray-900 text-white'
                             : 'text-gray-600 hover:bg-gray-100'
                         }`}
                       >
@@ -143,7 +154,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 truncate">
-                          {currentUser.full_name}
+                          {currentUser.full_name || currentUser.name}
                         </p>
                         <p className="text-sm text-gray-500 truncate">
                           {currentUser.email}
@@ -179,11 +190,11 @@ export default function Layout({ children, currentPageName }) {
         {/* Nav Items */}
         <nav className="flex-1 p-4 space-y-1">
           {NAV_ITEMS.map((item) => {
-            const isActive = currentPageName === item.page;
+            const isActive = location.pathname === item.path;
             return (
               <Link
-                key={item.page}
-                to={createPageUrl(item.page)}
+                key={item.path}
+                to={item.path}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                   isActive 
                     ? 'bg-[#005143] text-white' 
@@ -206,7 +217,7 @@ export default function Layout({ children, currentPageName }) {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-gray-900 truncate text-sm">
-                  {currentUser.full_name}
+                  {currentUser.full_name || currentUser.name}
                 </p>
                 <p className="text-xs text-gray-500 truncate">
                   {currentUser.email}
@@ -236,11 +247,11 @@ export default function Layout({ children, currentPageName }) {
         <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-gray-200/50 lg:hidden z-30">
           <div className="flex items-center justify-around px-2 pt-2 pb-6">
             {NAV_ITEMS.slice(0, 5).map((item) => {
-              const isActive = currentPageName === item.page;
+              const isActive = location.pathname === item.path;
               return (
                 <Link
-                  key={item.page}
-                  to={createPageUrl(item.page)}
+                  key={item.path}
+                  to={item.path}
                   className="flex flex-col items-center gap-1.5 px-2 py-1.5 min-w-[60px]"
                 >
                   <div className={`relative p-2 rounded-2xl transition-all ${
