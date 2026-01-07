@@ -1,135 +1,388 @@
 import React, { useState } from 'react';
-import { Home, X, User, Clock, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Home, X, User, Clock, Plus, CheckCircle, Wrench, Sparkles } from 'lucide-react';
 
-// Room data with coordinates and status
-const ROOMS = [
-  { id: 1, name: 'Living Room', x: 50, y: 50, width: 200, height: 150, status: 'active', tasks: 2 },
-  { id: 2, name: 'Kitchen', x: 270, y: 50, width: 180, height: 150, status: 'pending', tasks: 1 },
-  { id: 3, name: 'Bedroom 1', x: 50, y: 220, width: 150, height: 130, status: 'normal', tasks: 0 },
-  { id: 4, name: 'Bedroom 2', x: 220, y: 220, width: 150, height: 130, status: 'active', tasks: 1 },
-  { id: 5, name: 'Bathroom', x: 390, y: 220, width: 100, height: 130, status: 'normal', tasks: 0 },
-];
-
-const TASKS_DATA = {
-  1: [
-    { id: 1, title: 'Vacuum cleaning', assignee: 'Maid Service', status: 'in-progress', time: '30 mins' },
-    { id: 2, title: 'Window cleaning', assignee: 'Cleaning Crew', status: 'pending', time: '1 hour' }
-  ],
-  2: [
-    { id: 3, title: 'AC maintenance', assignee: 'HVAC Tech', status: 'in-progress', time: '2 hours' }
-  ],
-  4: [
-    { id: 4, title: 'Furniture assembly', assignee: 'Handyman', status: 'pending', time: '45 mins' }
-  ]
+// Hawaz Brand Colors
+const COLORS = {
+  growth: '#005143',
+  innovation: '#41E661',
+  clarity: '#FEF5E8',
+  depth: '#121B22',
+  strategy: '#F47D42'
 };
 
-function RoomBottomSheet({ room, onClose }) {
-  const tasks = TASKS_DATA[room.id] || [];
+// Room data with coordinates and status
+const initialRooms = [
+  { id: 1, name: 'Living Room', x: 50, y: 50, width: 200, height: 150, status: 'active', tasks: [] },
+  { id: 2, name: 'Kitchen', x: 270, y: 50, width: 180, height: 150, status: 'pending', tasks: [] },
+  { id: 3, name: 'Bedroom 1', x: 50, y: 220, width: 150, height: 130, status: 'normal', tasks: [] },
+  { id: 4, name: 'Bedroom 2', x: 220, y: 220, width: 150, height: 130, status: 'active', tasks: [] },
+  { id: 5, name: 'Bathroom', x: 390, y: 220, width: 100, height: 130, status: 'normal', tasks: [] },
+];
 
-  return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center md:justify-center" onClick={onClose}>
-      <div
-        className="bg-white rounded-t-3xl md:rounded-2xl w-full md:max-w-lg max-h-[80vh] overflow-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <Home className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold">{room.name}</h2>
-                <p className="text-sm text-gray-600">{tasks.length} active tasks</p>
-              </div>
-            </div>
-            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+function AddTaskModal({ room, onClose, onAdd }) {
+  const [taskData, setTaskData] = useState({
+    title: '',
+    type: 'cleaning',
+    assignee: '',
+    estimatedTime: ''
+  });
 
-          {tasks.length > 0 ? (
-            <div className="space-y-3">
-              {tasks.map((task) => (
-                <div key={task.id} className="p-4 bg-gray-50 rounded-xl">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold">{task.title}</h3>
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      task.status === 'in-progress'
-                        ? 'bg-orange-100 text-orange-700'
-                        : 'bg-gray-200 text-gray-700'
-                    }`}>
-                      {task.status}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
-                    <div className="flex items-center gap-1">
-                      <User className="w-4 h-4" />
-                      {task.assignee}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {task.time}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-              <AlertCircle className="w-12 h-12 mx-auto mb-2 opacity-50" />
-              <p>No active tasks in this room</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function DigitalTwin() {
-  const [selectedRoom, setSelectedRoom] = useState(null);
-
-  const getRoomColor = (status) => {
-    switch (status) {
-      case 'active':
-        return '#3b82f6'; // blue
-      case 'pending':
-        return '#f97316'; // orange - glowing for pending tasks
-      case 'normal':
-      default:
-        return '#e5e7eb'; // gray
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (taskData.title && taskData.assignee) {
+      onAdd({
+        ...taskData,
+        id: Date.now(),
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      });
+      onClose();
     }
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Digital Twin</h1>
-        <p className="text-gray-600">Interactive floor plan of your home</p>
-      </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 20 }}
+        className="bg-white rounded-3xl w-full max-w-md shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: COLORS.innovation }}>
+                <Plus className="w-6 h-6" style={{ color: COLORS.growth }} />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold" style={{ color: COLORS.depth }}>Add New Task</h2>
+                <p className="text-sm text-gray-500">{room.name}</p>
+              </div>
+            </div>
+            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
-      <div className="bg-white rounded-2xl p-6 border border-gray-200">
-        <div className="mb-4">
-          <h2 className="font-semibold mb-2">Legend</h2>
-          <div className="flex flex-wrap gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-blue-500 rounded"></div>
-              <span>Active Tasks</span>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold mb-2" style={{ color: COLORS.depth }}>
+                Task Title
+              </label>
+              <input
+                type="text"
+                value={taskData.title}
+                onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
+                placeholder="e.g., Clean AC filters"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:border-transparent outline-none transition-all"
+                style={{ focusRingColor: COLORS.innovation }}
+                required
+              />
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-orange-500 rounded"></div>
-              <span>Pending Tasks</span>
+
+            <div>
+              <label className="block text-sm font-semibold mb-2" style={{ color: COLORS.depth }}>
+                Task Type
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setTaskData({ ...taskData, type: 'cleaning' })}
+                  className={`p-4 rounded-2xl border-2 transition-all ${
+                    taskData.type === 'cleaning'
+                      ? 'border-transparent shadow-lg'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                  style={taskData.type === 'cleaning' ? { backgroundColor: `${COLORS.innovation}20`, borderColor: COLORS.innovation } : {}}
+                >
+                  <Sparkles className="w-6 h-6 mx-auto mb-2" style={{ color: taskData.type === 'cleaning' ? COLORS.growth : '#9ca3af' }} />
+                  <p className={`text-sm font-semibold ${taskData.type === 'cleaning' ? '' : 'text-gray-600'}`}
+                    style={taskData.type === 'cleaning' ? { color: COLORS.growth } : {}}>
+                    Cleaning
+                  </p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTaskData({ ...taskData, type: 'maintenance' })}
+                  className={`p-4 rounded-2xl border-2 transition-all ${
+                    taskData.type === 'maintenance'
+                      ? 'border-transparent shadow-lg'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                  style={taskData.type === 'maintenance' ? { backgroundColor: `${COLORS.strategy}20`, borderColor: COLORS.strategy } : {}}
+                >
+                  <Wrench className="w-6 h-6 mx-auto mb-2" style={{ color: taskData.type === 'maintenance' ? COLORS.strategy : '#9ca3af' }} />
+                  <p className={`text-sm font-semibold ${taskData.type === 'maintenance' ? '' : 'text-gray-600'}`}
+                    style={taskData.type === 'maintenance' ? { color: COLORS.strategy } : {}}>
+                    Maintenance
+                  </p>
+                </button>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-gray-300 rounded"></div>
-              <span>No Tasks</span>
+
+            <div>
+              <label className="block text-sm font-semibold mb-2" style={{ color: COLORS.depth }}>
+                Assign To
+              </label>
+              <input
+                type="text"
+                value={taskData.assignee}
+                onChange={(e) => setTaskData({ ...taskData, assignee: e.target.value })}
+                placeholder="Worker name or service provider"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:border-transparent outline-none transition-all"
+                required
+              />
             </div>
+
+            <div>
+              <label className="block text-sm font-semibold mb-2" style={{ color: COLORS.depth }}>
+                Estimated Time
+              </label>
+              <input
+                type="text"
+                value={taskData.estimatedTime}
+                onChange={(e) => setTaskData({ ...taskData, estimatedTime: e.target.value })}
+                placeholder="e.g., 1 hour, 30 mins"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full text-white py-3 rounded-xl font-semibold hover:opacity-90 transition-all shadow-lg"
+              style={{ backgroundColor: COLORS.growth }}
+            >
+              Add Task
+            </button>
+          </form>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function RoomBottomSheet({ room, onClose, onAddTask, onCompleteTask }) {
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  return (
+    <>
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end md:items-center md:justify-center"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ y: '100%', opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: '100%', opacity: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="bg-white rounded-t-3xl md:rounded-3xl w-full md:max-w-lg max-h-[85vh] overflow-auto shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: COLORS.growth }}>
+                    <Home className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold" style={{ color: COLORS.depth }}>{room.name}</h2>
+                    <p className="text-sm text-gray-600">{room.tasks.length} {room.tasks.length === 1 ? 'task' : 'tasks'}</p>
+                  </div>
+                </div>
+                <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
+                  <X className="w-5 w-5" />
+                </button>
+              </div>
+
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="w-full mb-4 py-3 rounded-2xl font-semibold transition-all shadow-lg text-white"
+                style={{ backgroundColor: COLORS.innovation, color: COLORS.growth }}
+              >
+                <Plus className="w-5 h-5 inline-block mr-2" />
+                Add New Task
+              </button>
+
+              {room.tasks.length > 0 ? (
+                <div className="space-y-3">
+                  {room.tasks.map((task) => (
+                    <motion.div
+                      key={task.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="p-4 rounded-2xl border-2 transition-all"
+                      style={{
+                        backgroundColor: task.status === 'completed' ? `${COLORS.innovation}10` : '#f9fafb',
+                        borderColor: task.status === 'completed' ? COLORS.innovation : '#e5e7eb'
+                      }}
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h3 className="font-semibold mb-1" style={{ color: COLORS.depth }}>{task.title}</h3>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className={`px-3 py-1 text-xs rounded-full font-semibold`}
+                              style={{
+                                backgroundColor: task.type === 'cleaning' ? `${COLORS.innovation}20` : `${COLORS.strategy}20`,
+                                color: task.type === 'cleaning' ? COLORS.growth : COLORS.strategy
+                              }}>
+                              {task.type === 'cleaning' ? '🧹 Cleaning' : '🔧 Maintenance'}
+                            </span>
+                            <span className={`px-3 py-1 text-xs rounded-full font-semibold ${
+                              task.status === 'completed'
+                                ? 'bg-green-100 text-green-700'
+                                : task.status === 'in-progress'
+                                ? 'bg-blue-100 text-blue-700'
+                                : 'bg-gray-200 text-gray-700'
+                            }`}>
+                              {task.status === 'completed' ? '✓ Completed' : task.status === 'in-progress' ? '⋯ In Progress' : '○ Pending'}
+                            </span>
+                          </div>
+                        </div>
+                        {task.status !== 'completed' && (
+                          <button
+                            onClick={() => onCompleteTask(room.id, task.id)}
+                            className="ml-2 p-2 rounded-xl transition-all hover:bg-green-100"
+                            style={{ color: COLORS.innovation }}
+                          >
+                            <CheckCircle className="w-5 h-5" />
+                          </button>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                        <div className="flex items-center gap-1">
+                          <User className="w-4 h-4" />
+                          {task.assignee}
+                        </div>
+                        {task.estimatedTime && (
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {task.estimatedTime}
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                    <Home className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <p className="text-gray-500 font-medium">No tasks in this room</p>
+                  <p className="text-sm text-gray-400 mt-1">Add a task to get started</p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
+
+      {showAddModal && (
+        <AddTaskModal
+          room={room}
+          onClose={() => setShowAddModal(false)}
+          onAdd={(taskData) => onAddTask(room.id, taskData)}
+        />
+      )}
+    </>
+  );
+}
+
+export default function DigitalTwin() {
+  const [rooms, setRooms] = useState(initialRooms);
+  const [selectedRoom, setSelectedRoom] = useState(null);
+
+  const addTaskToRoom = (roomId, taskData) => {
+    setRooms(rooms.map(room => {
+      if (room.id === roomId) {
+        const updatedTasks = [...room.tasks, taskData];
+        return {
+          ...room,
+          tasks: updatedTasks,
+          status: updatedTasks.some(t => t.status !== 'completed') ? 'active' : 'normal'
+        };
+      }
+      return room;
+    }));
+  };
+
+  const completeTask = (roomId, taskId) => {
+    setRooms(rooms.map(room => {
+      if (room.id === roomId) {
+        const updatedTasks = room.tasks.map(task =>
+          task.id === taskId ? { ...task, status: 'completed' } : task
+        );
+        return {
+          ...room,
+          tasks: updatedTasks,
+          status: updatedTasks.some(t => t.status !== 'completed') ? 'active' : 'normal'
+        };
+      }
+      return room;
+    }));
+  };
+
+  const getRoomColor = (room) => {
+    const activeTasks = room.tasks.filter(t => t.status !== 'completed').length;
+    if (activeTasks > 0) {
+      return COLORS.growth;
+    }
+    return '#e5e7eb';
+  };
+
+  const selectedRoomData = selectedRoom ? rooms.find(r => r.id === selectedRoom.id) : null;
+
+  return (
+    <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8" style={{ backgroundColor: COLORS.clarity }}>
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-6"
+      >
+        <h1 className="text-3xl font-bold mb-2" style={{ color: COLORS.depth }}>Digital Twin</h1>
+        <p className="text-gray-600">Interactive floor plan of your home</p>
+      </motion.div>
+
+      {/* Legend */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white rounded-3xl p-6 mb-6 shadow-lg border-0"
+      >
+        <h2 className="font-semibold mb-4" style={{ color: COLORS.depth }}>Room Status</h2>
+        <div className="flex flex-wrap gap-4 text-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded" style={{ backgroundColor: COLORS.growth }}></div>
+            <span className="font-medium text-gray-700">Active Tasks</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-gray-300 rounded"></div>
+            <span className="font-medium text-gray-700">No Tasks</span>
           </div>
         </div>
+      </motion.div>
 
-        {/* SVG Floor Plan */}
-        <div className="bg-gray-50 rounded-xl p-4 overflow-auto">
+      {/* SVG Floor Plan */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="bg-white rounded-3xl p-6 shadow-xl border-0"
+      >
+        <div className="rounded-2xl p-4 overflow-auto" style={{ backgroundColor: COLORS.clarity }}>
           <svg
             viewBox="0 0 550 400"
             className="w-full max-w-3xl mx-auto"
@@ -142,75 +395,92 @@ export default function DigitalTwin() {
               width="510"
               height="360"
               fill="none"
-              stroke="#94a3b8"
+              stroke={COLORS.depth}
               strokeWidth="3"
+              rx="12"
             />
 
             {/* Rooms */}
-            {ROOMS.map((room) => (
-              <g key={room.id}>
-                <rect
-                  x={room.x}
-                  y={room.y}
-                  width={room.width}
-                  height={room.height}
-                  fill={getRoomColor(room.status)}
-                  stroke="#64748b"
-                  strokeWidth="2"
-                  rx="8"
-                  className="cursor-pointer hover:opacity-80 transition-all"
-                  onClick={() => setSelectedRoom(room)}
-                  style={{
-                    filter: room.status === 'pending' ? 'drop-shadow(0 0 10px #f97316)' : 'none'
-                  }}
-                />
-                <text
-                  x={room.x + room.width / 2}
-                  y={room.y + room.height / 2}
-                  textAnchor="middle"
-                  fill={room.status === 'normal' ? '#1f2937' : '#ffffff'}
-                  fontSize="14"
-                  fontWeight="600"
-                  className="pointer-events-none"
-                >
-                  {room.name}
-                </text>
-                {room.tasks > 0 && (
-                  <circle
-                    cx={room.x + room.width - 15}
-                    cy={room.y + 15}
-                    r="12"
-                    fill="#ef4444"
-                    className="pointer-events-none"
+            {rooms.map((room) => {
+              const activeTasks = room.tasks.filter(t => t.status !== 'completed').length;
+              return (
+                <g key={room.id}>
+                  <rect
+                    x={room.x}
+                    y={room.y}
+                    width={room.width}
+                    height={room.height}
+                    fill={getRoomColor(room)}
+                    stroke={COLORS.depth}
+                    strokeWidth="2"
+                    rx="12"
+                    className="cursor-pointer hover:opacity-80 transition-all"
+                    onClick={() => setSelectedRoom(room)}
+                    style={{
+                      filter: activeTasks > 0 ? `drop-shadow(0 0 12px ${COLORS.innovation})` : 'none'
+                    }}
                   />
-                )}
-                {room.tasks > 0 && (
                   <text
-                    x={room.x + room.width - 15}
-                    y={room.y + 20}
+                    x={room.x + room.width / 2}
+                    y={room.y + room.height / 2 - 5}
                     textAnchor="middle"
-                    fill="white"
-                    fontSize="12"
-                    fontWeight="bold"
+                    fill={activeTasks > 0 ? '#ffffff' : COLORS.depth}
+                    fontSize="14"
+                    fontWeight="700"
                     className="pointer-events-none"
                   >
-                    {room.tasks}
+                    {room.name}
                   </text>
-                )}
-              </g>
-            ))}
+                  <text
+                    x={room.x + room.width / 2}
+                    y={room.y + room.height / 2 + 15}
+                    textAnchor="middle"
+                    fill={activeTasks > 0 ? '#ffffff' : '#9ca3af'}
+                    fontSize="12"
+                    fontWeight="600"
+                    className="pointer-events-none"
+                  >
+                    {activeTasks > 0 ? `${activeTasks} ${activeTasks === 1 ? 'task' : 'tasks'}` : 'No tasks'}
+                  </text>
+                  {activeTasks > 0 && (
+                    <>
+                      <circle
+                        cx={room.x + room.width - 20}
+                        cy={room.y + 20}
+                        r="14"
+                        fill={COLORS.innovation}
+                        className="pointer-events-none"
+                      />
+                      <text
+                        x={room.x + room.width - 20}
+                        y={room.y + 26}
+                        textAnchor="middle"
+                        fill={COLORS.growth}
+                        fontSize="13"
+                        fontWeight="bold"
+                        className="pointer-events-none"
+                      >
+                        {activeTasks}
+                      </text>
+                    </>
+                  )}
+                </g>
+              );
+            })}
           </svg>
         </div>
 
-        <p className="text-sm text-gray-600 mt-4 text-center">
-          Click on any room to view active tasks and assigned workers
+        <p className="text-sm text-gray-600 mt-6 text-center font-medium">
+          Click on any room to view and manage tasks
         </p>
-      </div>
+      </motion.div>
 
-      {selectedRoom && (
+      {selectedRoomData && (
         <RoomBottomSheet
-          room={selectedRoom}
+          room={selectedRoomData}
           onClose={() => setSelectedRoom(null)}
+          onAddTask={addTaskToRoom}
+          onCompleteTask={completeTask}
         />
       )}
     </div>

@@ -12,7 +12,8 @@
       "Bash(pkill:*)",
       "Bash(taskkill:*)",
       "Bash(npm uninstall:*)",
-      "Bash(npm run deploy:*)"
+      "Bash(npm run deploy:*)",
+      "Bash(git ls-tree:*)"
     ]
   }
 }
