@@ -141,6 +141,7 @@ function App() {
             <Route path="/assets" element={<Assets />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="*" element={<HomePage />} />
           </Routes>
         </main>
       </div>
@@ -148,4 +149,35 @@ function App() {
   );
 }
 
-export default App;
+// Add error boundary
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div className="p-8 text-center"><h1 className="text-2xl font-bold">Something went wrong</h1><p>Please refresh the page.</p></div>;
+    }
+    return this.props.children;
+  }
+}
+
+function AppWithErrorBoundary() {
+  return (
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  );
+}
+
+export default AppWithErrorBoundary;
