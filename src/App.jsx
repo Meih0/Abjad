@@ -289,8 +289,8 @@ function HomePage() {
               <h1 className="text-3xl font-bold tracking-tight text-white">Demo User 👋</h1>
               <p className="text-white/70 text-sm mt-1 font-medium" dir="rtl">أبجديات إدارة المنزل</p>
             </div>
-            <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg p-2">
-              <img src="/Abjad/images/Abjad Logo.png" alt="Abjad" className="w-full h-full object-contain" />
+            <div className="bg-white rounded-2xl flex items-center justify-center shadow-lg p-3">
+              <img src="/Abjad/images/Full Abjad Logo.png" alt="Abjad" className="h-12 w-auto" />
             </div>
           </div>
 
