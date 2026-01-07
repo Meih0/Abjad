@@ -1,160 +1,267 @@
 import React, { useState } from 'react';
-import { Store, Star, DollarSign, Clock, Phone, CheckCircle, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Store, Star, Clock, Phone, CheckCircle, X, MapPin, Award, TrendingUp, Sparkles } from 'lucide-react';
+
+// Hawaz Brand Colors
+const COLORS = {
+  growth: '#005143',
+  innovation: '#41E661',
+  clarity: '#FEF5E8',
+  depth: '#121B22',
+  strategy: '#F47D42'
+};
 
 const SERVICES = [
   {
     id: 1,
-    provider_name: 'CleanPro Services',
-    service_type: 'Cleaning',
-    rating: 4.8,
-    reviews: 234,
-    base_price: 500,
-    duration: '2 hours',
-    phone: '+91 98765 43210',
-    image: '🧹'
+    provider_name: 'نظافة الرياض - Riyadh CleanPro',
+    service_type: 'تنظيف شامل - Deep Cleaning',
+    rating: 4.9,
+    reviews: 487,
+    base_price: 350,
+    duration: '2-3 hours',
+    phone: '+966 50 123 4567',
+    location: 'Riyadh, KSA',
+    image: '🧹',
+    verified: true,
+    specialty: 'Residential & Commercial'
   },
   {
     id: 2,
-    provider_name: 'CoolTech HVAC',
-    service_type: 'AC Maintenance',
-    rating: 4.9,
-    reviews: 189,
-    base_price: 800,
-    duration: '1.5 hours',
-    phone: '+91 98765 43211',
-    image: '❄️'
+    provider_name: 'بناء الأحلام - Binaa Al-Ahlam',
+    service_type: 'صيانة وبناء - Maintenance & Construction',
+    rating: 4.8,
+    reviews: 312,
+    base_price: 500,
+    duration: '2-4 hours',
+    phone: '+966 50 234 5678',
+    location: 'Jeddah, KSA',
+    image: '🔨',
+    verified: true,
+    specialty: 'Home Repairs & Renovations'
   },
   {
     id: 3,
-    provider_name: 'HandyFix',
-    service_type: 'Plumbing',
-    rating: 4.7,
-    reviews: 156,
-    base_price: 600,
-    duration: '1 hour',
-    phone: '+91 98765 43212',
-    image: '🔧'
+    provider_name: 'CoolBreeze HVAC المملكة',
+    service_type: 'صيانة التكييف - AC Maintenance',
+    rating: 4.9,
+    reviews: 523,
+    base_price: 280,
+    duration: '1-2 hours',
+    phone: '+966 50 345 6789',
+    location: 'Dammam, KSA',
+    image: '❄️',
+    verified: true,
+    specialty: 'AC Installation & Service'
   },
   {
     id: 4,
-    provider_name: 'SparkElectric',
-    service_type: 'Electrical',
-    rating: 4.9,
-    reviews: 201,
-    base_price: 700,
-    duration: '1 hour',
-    phone: '+91 98765 43213',
-    image: '⚡'
+    provider_name: 'السباك الماهر - Al-Sabbak Al-Mahir',
+    service_type: 'سباكة - Plumbing Services',
+    rating: 4.7,
+    reviews: 298,
+    base_price: 250,
+    duration: '1-2 hours',
+    phone: '+966 50 456 7890',
+    location: 'Riyadh, KSA',
+    image: '🔧',
+    verified: true,
+    specialty: 'Emergency & Regular Plumbing'
   },
   {
     id: 5,
-    provider_name: 'GreenGarden',
-    service_type: 'Gardening',
-    rating: 4.6,
-    reviews: 98,
-    base_price: 450,
-    duration: '2 hours',
-    phone: '+91 98765 43214',
-    image: '🌿'
+    provider_name: 'SparkPro الكهرباء الذكية',
+    service_type: 'كهرباء - Electrical Work',
+    rating: 4.9,
+    reviews: 419,
+    base_price: 300,
+    duration: '1-3 hours',
+    phone: '+966 50 567 8901',
+    location: 'Riyadh, KSA',
+    image: '⚡',
+    verified: true,
+    specialty: 'Smart Home & Electrical'
   },
   {
     id: 6,
-    provider_name: 'PestAway',
-    service_type: 'Pest Control',
+    provider_name: 'حدائق الجنة - Hadaiq Al-Jannah',
+    service_type: 'تنسيق حدائق - Landscaping',
     rating: 4.8,
-    reviews: 167,
-    base_price: 1200,
-    duration: '3 hours',
-    phone: '+91 98765 43215',
-    image: '🐛'
+    reviews: 267,
+    base_price: 400,
+    duration: '2-3 hours',
+    phone: '+966 50 678 9012',
+    location: 'Jeddah, KSA',
+    image: '🌿',
+    verified: true,
+    specialty: 'Garden Design & Maintenance'
+  },
+  {
+    id: 7,
+    provider_name: 'مكافحة الآفات المتقدمة - Advanced Pest Control',
+    service_type: 'مكافحة حشرات - Pest Control',
+    rating: 4.9,
+    reviews: 381,
+    base_price: 450,
+    duration: '2-4 hours',
+    phone: '+966 50 789 0123',
+    location: 'Riyadh, KSA',
+    image: '🐛',
+    verified: true,
+    specialty: 'Eco-Friendly Solutions'
+  },
+  {
+    id: 8,
+    provider_name: 'دهانات الفن الراقي - Elite Paint Masters',
+    service_type: 'دهانات وديكور - Painting & Decor',
+    rating: 4.8,
+    reviews: 203,
+    base_price: 600,
+    duration: '4-8 hours',
+    phone: '+966 50 890 1234',
+    location: 'Riyadh, KSA',
+    image: '🎨',
+    verified: true,
+    specialty: 'Interior & Exterior Painting'
   }
 ];
 
 function BookingModal({ service, onClose, onConfirm }) {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
+  const [notes, setNotes] = useState('');
 
   const handleBooking = () => {
     if (selectedDate && selectedTime) {
       onConfirm({
         service,
         date: selectedDate,
-        time: selectedTime
+        time: selectedTime,
+        notes
       });
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-2xl max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Book Service</h2>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="mb-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-3xl">
-              {service.image}
-            </div>
-            <div>
-              <h3 className="font-semibold text-lg">{service.provider_name}</h3>
-              <p className="text-gray-600">{service.service_type}</p>
-            </div>
-          </div>
-
-          <div className="bg-gray-50 rounded-xl p-4 mb-4">
-            <div className="flex justify-between mb-2">
-              <span className="text-gray-600">Base Price</span>
-              <span className="font-semibold">₹{service.base_price}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Duration</span>
-              <span className="font-semibold">{service.duration}</span>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Select Date</label>
-              <input
-                type="date"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                min={new Date().toISOString().split('T')[0]}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Select Time</label>
-              <select
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={selectedTime}
-                onChange={(e) => setSelectedTime(e.target.value)}
-              >
-                <option value="">Choose a time slot</option>
-                <option value="09:00">09:00 AM</option>
-                <option value="11:00">11:00 AM</option>
-                <option value="14:00">02:00 PM</option>
-                <option value="16:00">04:00 PM</option>
-                <option value="18:00">06:00 PM</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <button
-          onClick={handleBooking}
-          disabled={!selectedDate || !selectedTime}
-          className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all"
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="bg-white rounded-3xl max-w-lg w-full shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
         >
-          Confirm Booking - ₹{service.base_price}
-        </button>
-      </div>
-    </div>
+          <div className="p-6 border-b border-gray-100">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold" style={{ color: COLORS.depth }}>Book Service</h2>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <div className="flex items-center gap-4 mb-6 p-4 rounded-2xl" style={{ backgroundColor: `${COLORS.growth}10` }}>
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-lg" style={{ backgroundColor: COLORS.growth }}>
+                <span className="filter brightness-0 invert">{service.image}</span>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-lg" style={{ color: COLORS.depth }}>{service.provider_name}</h3>
+                <p className="text-gray-600 text-sm">{service.service_type}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                  <span className="font-semibold text-sm">{service.rating}</span>
+                  <span className="text-xs text-gray-500">({service.reviews} reviews)</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl p-4 mb-6">
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-gray-600 font-medium">Base Price</span>
+                <span className="font-bold text-xl" style={{ color: COLORS.growth }}>
+                  {service.base_price} SAR
+                </span>
+              </div>
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-gray-600 font-medium">Duration</span>
+                <span className="font-semibold" style={{ color: COLORS.depth }}>{service.duration}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600 font-medium">Location</span>
+                <span className="font-semibold text-sm" style={{ color: COLORS.depth }}>{service.location}</span>
+              </div>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-semibold mb-2" style={{ color: COLORS.depth }}>
+                  Select Date
+                </label>
+                <input
+                  type="date"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-0 transition-colors"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2" style={{ color: COLORS.depth }}>
+                  Select Time
+                </label>
+                <select
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-0 transition-colors"
+                  value={selectedTime}
+                  onChange={(e) => setSelectedTime(e.target.value)}
+                >
+                  <option value="">Choose a time slot</option>
+                  <option value="08:00">08:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="12:00">12:00 PM</option>
+                  <option value="14:00">02:00 PM</option>
+                  <option value="16:00">04:00 PM</option>
+                  <option value="18:00">06:00 PM</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2" style={{ color: COLORS.depth }}>
+                  Additional Notes (Optional)
+                </label>
+                <textarea
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-0 transition-colors resize-none"
+                  rows="3"
+                  placeholder="Any specific requirements or details..."
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={handleBooking}
+              disabled={!selectedDate || !selectedTime}
+              className="w-full text-white py-4 rounded-2xl font-bold text-lg hover:opacity-90 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all active:scale-95 shadow-lg"
+              style={{ backgroundColor: !selectedDate || !selectedTime ? '#d1d5db' : COLORS.growth }}
+            >
+              Confirm Booking - {service.base_price} SAR
+            </button>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 
@@ -166,105 +273,242 @@ export default function Marketplace() {
   const handleConfirmBooking = (booking) => {
     setBookings([...bookings, { ...booking, id: Date.now(), status: 'confirmed' }]);
     setSelectedService(null);
-    alert('Booking confirmed! The service provider will contact you soon.');
   };
+
+  const categories = [
+    { id: 'all', label: 'All Services', icon: Store },
+    { id: 'cleaning', label: 'Cleaning', icon: Sparkles },
+    { id: 'ac', label: 'AC Service', icon: '❄️' },
+    { id: 'maintenance', label: 'Maintenance', icon: '🔧' },
+    { id: 'electrical', label: 'Electrical', icon: '⚡' }
+  ];
 
   const filteredServices = filter === 'all'
     ? SERVICES
-    : SERVICES.filter(s => s.service_type.toLowerCase().includes(filter.toLowerCase()));
+    : SERVICES.filter(s =>
+        s.service_type.toLowerCase().includes(filter.toLowerCase()) ||
+        s.specialty.toLowerCase().includes(filter.toLowerCase())
+      );
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Service Marketplace</h1>
-        <p className="text-gray-600">Book trusted service providers</p>
+    <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8" style={{ backgroundColor: COLORS.clarity }}>
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-6"
+      >
+        <h1 className="text-3xl font-bold mb-2" style={{ color: COLORS.depth }}>
+          Service Marketplace
+        </h1>
+        <p className="text-gray-600">Book trusted service providers across Saudi Arabia</p>
+      </motion.div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1 }}
+          className="bg-white rounded-2xl p-4 shadow-lg"
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${COLORS.growth}20` }}>
+              <Store className="w-5 h-5" style={{ color: COLORS.growth }} />
+            </div>
+          </div>
+          <p className="text-2xl font-bold" style={{ color: COLORS.depth }}>{SERVICES.length}</p>
+          <p className="text-xs text-gray-600 font-medium">Providers</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.15 }}
+          className="bg-white rounded-2xl p-4 shadow-lg"
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-yellow-100">
+              <Award className="w-5 h-5 text-yellow-600" />
+            </div>
+          </div>
+          <p className="text-2xl font-bold" style={{ color: COLORS.depth }}>100%</p>
+          <p className="text-xs text-gray-600 font-medium">Verified</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white rounded-2xl p-4 shadow-lg"
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${COLORS.innovation}20` }}>
+              <TrendingUp className="w-5 h-5" style={{ color: COLORS.growth }} />
+            </div>
+          </div>
+          <p className="text-2xl font-bold" style={{ color: COLORS.depth }}>4.8</p>
+          <p className="text-xs text-gray-600 font-medium">Avg Rating</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.25 }}
+          className="bg-white rounded-2xl p-4 shadow-lg"
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${COLORS.strategy}20` }}>
+              <CheckCircle className="w-5 h-5" style={{ color: COLORS.strategy }} />
+            </div>
+          </div>
+          <p className="text-2xl font-bold" style={{ color: COLORS.depth }}>{bookings.length}</p>
+          <p className="text-xs text-gray-600 font-medium">Your Bookings</p>
+        </motion.div>
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {['all', 'cleaning', 'ac', 'plumbing', 'electrical'].map((category) => (
-          <button
-            key={category}
-            onClick={() => setFilter(category)}
-            className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
-              filter === category
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+      <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
+        {categories.map((category) => (
+          <motion.button
+            key={category.id}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setFilter(category.id)}
+            className={`px-5 py-3 rounded-2xl whitespace-nowrap transition-all font-semibold shadow-md ${
+              filter === category.id
+                ? 'text-white'
+                : 'bg-white text-gray-700 hover:shadow-lg'
             }`}
+            style={filter === category.id ? { backgroundColor: COLORS.growth } : {}}
           >
-            {category.charAt(0).toUpperCase() + category.slice(1)}
-          </button>
+            {category.label}
+          </motion.button>
         ))}
       </div>
 
       {/* Service Cards */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredServices.map((service) => (
-          <div key={service.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"
+      >
+        {filteredServices.map((service, index) => (
+          <motion.div
+            key={service.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05 }}
+            className="bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+          >
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
-                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-3xl">
-                  {service.image}
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-md group-hover:scale-110 transition-transform" style={{ backgroundColor: COLORS.growth }}>
+                  <span className="filter brightness-0 invert">{service.image}</span>
                 </div>
-                <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
-                  <Star className="w-4 h-4 text-yellow-600 fill-yellow-600" />
-                  <span className="text-sm font-semibold text-yellow-700">{service.rating}</span>
-                  <span className="text-xs text-yellow-600">({service.reviews})</span>
+                <div className="flex flex-col items-end gap-2">
+                  {service.verified && (
+                    <div className="flex items-center gap-1 px-2 py-1 rounded-full" style={{ backgroundColor: `${COLORS.innovation}20` }}>
+                      <CheckCircle className="w-3 h-3" style={{ color: COLORS.growth }} />
+                      <span className="text-xs font-semibold" style={{ color: COLORS.growth }}>Verified</span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full">
+                    <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                    <span className="text-sm font-bold text-yellow-700">{service.rating}</span>
+                    <span className="text-xs text-yellow-600">({service.reviews})</span>
+                  </div>
                 </div>
               </div>
 
-              <h3 className="font-bold text-lg mb-1">{service.provider_name}</h3>
-              <p className="text-gray-600 mb-4">{service.service_type}</p>
+              <h3 className="font-bold text-lg mb-1" style={{ color: COLORS.depth }}>
+                {service.provider_name}
+              </h3>
+              <p className="text-gray-600 text-sm mb-3">{service.service_type}</p>
+              <p className="text-xs text-gray-500 mb-4 font-medium">{service.specialty}</p>
 
               <div className="space-y-2 mb-4 text-sm">
-                <div className="flex items-center gap-2 text-gray-600">
-                  <DollarSign className="w-4 h-4" />
-                  Starting from ₹{service.base_price}
+                <div className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-xl">
+                  <span className="text-gray-600 font-medium">Starting from</span>
+                  <span className="font-bold text-lg" style={{ color: COLORS.growth }}>
+                    {service.base_price} SAR
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex items-center gap-2 text-gray-600 px-1">
                   <Clock className="w-4 h-4" />
-                  {service.duration}
+                  <span>{service.duration}</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex items-center gap-2 text-gray-600 px-1">
+                  <MapPin className="w-4 h-4" />
+                  <span className="text-sm">{service.location}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600 px-1">
                   <Phone className="w-4 h-4" />
-                  {service.phone}
+                  <span className="text-sm" dir="ltr">{service.phone}</span>
                 </div>
               </div>
 
               <button
                 onClick={() => setSelectedService(service)}
-                className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-all"
+                className="w-full text-white py-3 rounded-2xl font-bold hover:opacity-90 transition-all active:scale-95 shadow-md"
+                style={{ backgroundColor: COLORS.growth }}
               >
                 Book Now
               </button>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* My Bookings */}
       {bookings.length > 0 && (
-        <div>
-          <h2 className="text-xl font-semibold mb-4">My Bookings</h2>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-8"
+        >
+          <h2 className="text-2xl font-bold mb-4" style={{ color: COLORS.depth }}>My Bookings</h2>
           <div className="space-y-3">
             {bookings.map((booking) => (
-              <div key={booking.id} className="bg-green-50 rounded-xl p-4 border border-green-200">
+              <motion.div
+                key={booking.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="bg-white rounded-3xl p-5 shadow-lg border-2"
+                style={{ borderColor: COLORS.innovation }}
+              >
                 <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold">{booking.service.provider_name}</h3>
-                    <p className="text-sm text-gray-600">
-                      {new Date(booking.date).toLocaleDateString()} at {booking.time}
-                    </p>
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-md" style={{ backgroundColor: COLORS.growth }}>
+                      <span className="filter brightness-0 invert">{booking.service.image}</span>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg" style={{ color: COLORS.depth }}>
+                        {booking.service.provider_name}
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        {new Date(booking.date).toLocaleDateString('en-GB')} at {booking.time}
+                      </p>
+                      <p className="text-sm font-semibold" style={{ color: COLORS.growth }}>
+                        {booking.service.base_price} SAR
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-green-700">
-                    <CheckCircle className="w-5 h-5" />
-                    <span className="font-semibold">Confirmed</span>
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: `${COLORS.innovation}20` }}>
+                    <CheckCircle className="w-5 h-5" style={{ color: COLORS.growth }} />
+                    <span className="font-bold" style={{ color: COLORS.growth }}>Confirmed</span>
                   </div>
                 </div>
-              </div>
+                {booking.notes && (
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+                    <p className="text-xs text-gray-500 font-semibold mb-1">Notes:</p>
+                    <p className="text-sm text-gray-700">{booking.notes}</p>
+                  </div>
+                )}
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {selectedService && (
