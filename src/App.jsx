@@ -6,7 +6,9 @@ import DigitalTwin from './pages/DigitalTwin';
 import Assets from './pages/Assets';
 import Tasks from './pages/Tasks';
 import Marketplace from './pages/Marketplace';
-import { Home, Map, Package, ClipboardList, Store, Menu, X, User, ChevronRight, CheckCircle, Clock, Wrench, AlertCircle } from 'lucide-react';
+import Cart from './pages/Cart';
+import Account from './pages/Account';
+import { Home, Map, Package, ClipboardList, Store, Menu, X, User, ChevronRight, CheckCircle, Clock, Wrench, AlertCircle, ShoppingCart, Search } from 'lucide-react';
 
 // Hawaz Brand Colors
 const COLORS = {
@@ -25,7 +27,9 @@ function Navigation() {
     { path: '/digital-twin', icon: Map, label: 'Digital Twin' },
     { path: '/assets', icon: Package, label: 'Assets' },
     { path: '/tasks', icon: ClipboardList, label: 'Tasks' },
-    { path: '/marketplace', icon: Store, label: 'Marketplace' }
+    { path: '/marketplace', icon: Store, label: 'Marketplace' },
+    { path: '/cart', icon: ShoppingCart, label: 'Cart' },
+    { path: '/account', icon: User, label: 'Account' }
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -129,8 +133,8 @@ function Navigation() {
                       <User className="h-5 w-5 text-gray-500" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate" style={{ color: COLORS.depth }}>Demo User</p>
-                      <p className="text-sm text-gray-500 truncate">demo@hometwin.com</p>
+                      <p className="font-medium truncate" style={{ color: COLORS.depth }}>Rayan Al-Masad</p>
+                      <p className="text-sm text-gray-500 truncate">rayan.almasad@example.com</p>
                     </div>
                   </div>
                 </div>
@@ -177,8 +181,8 @@ function Navigation() {
               <User className="h-5 w-5 text-gray-500" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate" style={{ color: COLORS.depth }}>Demo User</p>
-              <p className="text-xs text-gray-500 truncate">demo@hometwin.com</p>
+              <p className="font-medium text-sm truncate" style={{ color: COLORS.depth }}>Rayan Al-Masad</p>
+              <p className="text-xs text-gray-500 truncate">rayan.almasad@example.com</p>
             </div>
           </div>
         </div>
@@ -227,6 +231,8 @@ function Navigation() {
 }
 
 function HomePage() {
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Mock data for demo
   const [stats] = useState({
     rooms: 8,
@@ -275,6 +281,20 @@ function HomePage() {
       color: COLORS.innovation,
       description: 'Service providers'
     },
+    {
+      name: 'Shopping Cart',
+      path: '/cart',
+      icon: ShoppingCart,
+      color: COLORS.growth,
+      description: 'Your orders'
+    },
+    {
+      name: 'My Account',
+      path: '/account',
+      icon: User,
+      color: COLORS.innovation,
+      description: 'Profile & settings'
+    },
   ];
 
   return (
@@ -286,7 +306,7 @@ function HomePage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <p className="text-white/80 text-sm font-medium mb-1">Welcome back</p>
-              <h1 className="text-3xl font-bold tracking-tight text-white">Demo User 👋</h1>
+              <h1 className="text-3xl font-bold tracking-tight text-white">Rayan Al-Masad 👋</h1>
               <p className="text-white/70 text-sm mt-1 font-medium" dir="rtl">أبجديات إدارة المنزل</p>
             </div>
             <div className="bg-white rounded-2xl flex items-center justify-center shadow-lg p-3">
@@ -361,6 +381,26 @@ function HomePage() {
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-5 -mt-4 pb-24 lg:pb-8">
+        {/* Search Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-3xl shadow-lg mb-5 overflow-hidden"
+        >
+          <div className="p-4">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search tasks, rooms, assets..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-green-500 focus:ring-0 transition-colors"
+              />
+            </div>
+          </div>
+        </motion.div>
+
         {/* Progress Card - App Style */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -583,6 +623,8 @@ function AppContent() {
           <Route path="/assets" element={<Assets />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/account" element={<Account />} />
           <Route path="*" element={<HomePage />} />
         </Routes>
       </main>
