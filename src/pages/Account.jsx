@@ -90,9 +90,9 @@ function Account() {
   });
 
   const [profileData, setProfileData] = useState({
-    name: 'Rayan Al-Masad',
-    nameAr: 'ريان المسعد',
-    email: 'rayan.almasad@example.com',
+    name: 'Fulan AlFulani',
+    nameAr: 'فلان الفلاني',
+    email: 'fulan.alfulani@example.com',
     phone: '+966 50 123 4567',
     language: 'en',
     avatar: '👨‍💼'

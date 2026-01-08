@@ -133,8 +133,8 @@ function Navigation() {
                       <User className="h-5 w-5 text-gray-500" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate" style={{ color: COLORS.depth }}>Rayan Al-Masad</p>
-                      <p className="text-sm text-gray-500 truncate">rayan.almasad@example.com</p>
+                      <p className="font-medium truncate" style={{ color: COLORS.depth }}>Fulan AlFulani</p>
+                      <p className="text-sm text-gray-500 truncate">fulan.alfulani@example.com</p>
                     </div>
                   </div>
                 </div>
@@ -181,8 +181,8 @@ function Navigation() {
               <User className="h-5 w-5 text-gray-500" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate" style={{ color: COLORS.depth }}>Rayan Al-Masad</p>
-              <p className="text-xs text-gray-500 truncate">rayan.almasad@example.com</p>
+              <p className="font-medium text-sm truncate" style={{ color: COLORS.depth }}>Fulan AlFulani</p>
+              <p className="text-xs text-gray-500 truncate">fulan.alfulani@example.com</p>
             </div>
           </div>
         </div>
@@ -306,7 +306,7 @@ function HomePage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <p className="text-white/80 text-sm font-medium mb-1">Welcome back</p>
-              <h1 className="text-3xl font-bold tracking-tight text-white">Rayan Al-Masad 👋</h1>
+              <h1 className="text-3xl font-bold tracking-tight text-white">Fulan AlFulani 👋</h1>
               <p className="text-white/70 text-sm mt-1 font-medium" dir="rtl">أبجديات إدارة المنزل</p>
             </div>
             <div className="bg-white rounded-2xl flex items-center justify-center shadow-lg p-3">
