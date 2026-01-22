@@ -193,25 +193,15 @@ function Landing() {
                 transition={{ duration: 0.6, delay: 0.8 }}
                 className="flex flex-col sm:flex-row gap-4 relative z-20"
               >
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link to="/signup">
-                    <button
-                      className="group font-bold text-lg px-8 py-4 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-3 justify-center w-full sm:w-auto"
-                      style={{ backgroundColor: COLORS.innovation, color: COLORS.depth }}
-                    >
-                      ابدأ الآن | Get Started
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  </Link>
-                  <Link to="/login">
-                    <button
-                      className="group font-bold text-lg px-8 py-4 rounded-2xl border-2 transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-3 justify-center w-full sm:w-auto"
-                      style={{ borderColor: 'white', color: 'white' }}
-                    >
-                      تسجيل الدخول | Sign In
-                    </button>
-                  </Link>
-                </div>
+                <Link to="/home">
+                  <button
+                    className="group font-bold text-lg px-8 py-4 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-3 justify-center w-full sm:w-auto"
+                    style={{ backgroundColor: COLORS.innovation, color: COLORS.depth }}
+                  >
+                    ابدأ الآن | Get Started
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </Link>
               </motion.div>
 
               {/* Hawaz Subsidiary Badge */}

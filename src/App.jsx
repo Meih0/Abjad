@@ -1,14 +1,31 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import Login from './components/auth/Login';
+import Signup from './components/auth/Signup';
 import Landing from './pages/Landing';
-import DigitalTwin from './pages/DigitalTwin';
+import DigitalTwin from './pages/DigitalTwinReal';
 import Assets from './pages/Assets';
-import Tasks from './pages/Tasks';
+import Tasks from './pages/TasksReal';
 import Marketplace from './pages/Marketplace';
 import Cart from './pages/Cart';
 import Account from './pages/Account';
+import Debug from './pages/Debug';
 import { Home, Map, Package, ClipboardList, Store, Menu, X, User, ChevronRight, CheckCircle, Clock, Wrench, AlertCircle, ShoppingCart, Search } from 'lucide-react';
+
+// Create React Query client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
 // Hawaz Brand Colors
 const COLORS = {
@@ -21,6 +38,7 @@ const COLORS = {
 function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   const navItems = [
     { path: '/home', icon: Home, label: 'Home' },
@@ -33,6 +51,14 @@ function Navigation() {
   ];
 
   const isActive = (path) => location.pathname === path;
+
+  async function handleLogout() {
+    try {
+      await logout();
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  }
 
   return (
     <>
@@ -93,7 +119,7 @@ function Navigation() {
                 <div className="flex items-center justify-between p-4 border-b border-gray-100">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
-                      <img src="/Abjad/images/Abjad Logo.png" alt="Abjad" className="w-full h-full object-contain" />
+                      <img src="/images/Abjad Logo.png" alt="Abjad" className="w-full h-full object-contain" />
                     </div>
                     <span className="font-bold" style={{ color: COLORS.depth }}>Abjad</span>
                   </div>
@@ -133,10 +159,17 @@ function Navigation() {
                       <User className="h-5 w-5 text-gray-500" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate" style={{ color: COLORS.depth }}>Fulan AlFulani</p>
-                      <p className="text-sm text-gray-500 truncate">fulan.alfulani@example.com</p>
+                      <p className="font-medium truncate" style={{ color: COLORS.depth }}>{user?.name || 'User'}</p>
+                      <p className="text-sm text-gray-500 truncate">{user?.email}</p>
                     </div>
                   </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full py-2 px-4 rounded-xl font-semibold text-white transition-all hover:shadow-lg"
+                    style={{ backgroundColor: COLORS.growth }}
+                  >
+                    Logout
+                  </button>
                 </div>
               </div>
             </motion.aside>
@@ -176,15 +209,22 @@ function Navigation() {
 
         {/* User Section */}
         <div className="p-4 border-t border-gray-100">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
               <User className="h-5 w-5 text-gray-500" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate" style={{ color: COLORS.depth }}>Fulan AlFulani</p>
-              <p className="text-xs text-gray-500 truncate">fulan.alfulani@example.com</p>
+              <p className="font-medium text-sm truncate" style={{ color: COLORS.depth }}>{user?.name || 'User'}</p>
+              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
             </div>
           </div>
+          <button
+            onClick={handleLogout}
+            className="w-full py-2 px-4 rounded-xl font-semibold text-white text-sm transition-all hover:shadow-lg"
+            style={{ backgroundColor: COLORS.growth }}
+          >
+            Logout
+          </button>
         </div>
       </aside>
 
@@ -232,6 +272,7 @@ function Navigation() {
 
 function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const { user } = useAuth();
 
   // Mock data for demo
   const [stats] = useState({
@@ -306,11 +347,11 @@ function HomePage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <p className="text-white/80 text-sm font-medium mb-1">Welcome back</p>
-              <h1 className="text-3xl font-bold tracking-tight text-white">Fulan AlFulani 👋</h1>
+              <h1 className="text-3xl font-bold tracking-tight text-white">{user?.name || 'User'} 👋</h1>
               <p className="text-white/70 text-sm mt-1 font-medium" dir="rtl">أبجديات إدارة المنزل</p>
             </div>
             <div className="bg-white rounded-2xl flex items-center justify-center shadow-lg p-3">
-              <img src="/Abjad/images/Full Abjad Logo.png" alt="Abjad" className="h-12 w-auto" />
+              <img src="/images/Full Abjad Logo.png" alt="Abjad" className="h-12 w-auto" />
             </div>
           </div>
 
@@ -611,21 +652,28 @@ function HomePage() {
 function AppContent() {
   const location = useLocation();
   const isLandingPage = location.pathname === '/';
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: COLORS.clarity }}>
-      {!isLandingPage && <Navigation />}
-      <main className={!isLandingPage ? "lg:ml-64" : ""}>
+      {!isLandingPage && !isAuthPage && <Navigation />}
+      <main className={!isLandingPage && !isAuthPage ? "lg:ml-64" : ""}>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Landing />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/digital-twin" element={<DigitalTwin />} />
-          <Route path="/assets" element={<Assets />} />
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/account" element={<Account />} />
-          <Route path="*" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/debug" element={<Debug />} />
+
+          {/* Protected Routes */}
+          <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+          <Route path="/digital-twin" element={<ProtectedRoute><DigitalTwin /></ProtectedRoute>} />
+          <Route path="/assets" element={<ProtectedRoute><Assets /></ProtectedRoute>} />
+          <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+          <Route path="/marketplace" element={<ProtectedRoute><Marketplace /></ProtectedRoute>} />
+          <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+          <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+          <Route path="*" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
         </Routes>
       </main>
     </div>
@@ -634,9 +682,13 @@ function AppContent() {
 
 function App() {
   return (
-    <Router basename="/Abjad">
-      <AppContent />
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Router basename="/">
+          <AppContent />
+        </Router>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 

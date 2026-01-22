@@ -1,0 +1,6 @@
+# Don't redirect assets
+/assets/*  /assets/:splat  200
+/images/*  /images/:splat  200
+
+# Redirect everything else to index.html for client-side routing
+/*    /index.html   200

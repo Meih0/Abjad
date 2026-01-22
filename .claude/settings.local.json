@@ -15,7 +15,10 @@
       "Bash(npm run deploy:*)",
       "Bash(git ls-tree:*)",
       "Bash(timeout /t 3)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(amplify publish:*)",
+      "Bash(npm run build:*)",
+      "Bash(amplify console:*)"
     ]
   }
 }
