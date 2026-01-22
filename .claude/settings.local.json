@@ -18,7 +18,9 @@
       "Bash(dir:*)",
       "Bash(amplify publish:*)",
       "Bash(npm run build:*)",
-      "Bash(amplify console:*)"
+      "Bash(amplify console:*)",
+      "Bash(git add:*)",
+      "Bash(git hash-object:*)"
     ]
   }
 }
