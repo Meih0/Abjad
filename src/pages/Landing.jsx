@@ -128,7 +128,7 @@ function Landing() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="text-center py-4 text-4xl font-bold">Test</div>
+      <div className="text-center py-4 text-4xl font-bold bg-yellow-300 text-red-600 border-4 border-red-600 z-50 relative">🔴 TEST - THIS SHOULD BE VISIBLE 🔴</div>
       {/* Hero Section - Inspired by Hawaz.sa */}
       <section className="relative overflow-hidden min-h-screen flex items-center" style={{ backgroundColor: COLORS.growth }}>
         {/* Subtle Pattern Background */}
