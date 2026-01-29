@@ -7,13 +7,15 @@ const client = generateClient();
 // ==========================================
 
 // Rooms
-export const listRooms = /* GraphQL */ `
-  query ListRooms($filter: ModelRoomFilterInput, $limit: Int) {
-    listRooms(filter: $filter, limit: $limit) {
+export const listRoomsByHome = /* GraphQL */ `
+  query ListRoomsByHome($homeId: ID!) {
+    roomsByHomeId(homeId: $homeId) {
       items {
         id
-        userId
+        homeId
+        homeOwners
         name
+        nameAr
         x
         y
         width
@@ -26,12 +28,14 @@ export const listRooms = /* GraphQL */ `
   }
 `;
 
-export const createRoom = /* GraphQL */ `
+export const createRoomMutation = /* GraphQL */ `
   mutation CreateRoom($input: CreateRoomInput!) {
     createRoom(input: $input) {
       id
-      userId
+      homeId
+      homeOwners
       name
+      nameAr
       x
       y
       width
@@ -43,77 +47,51 @@ export const createRoom = /* GraphQL */ `
   }
 `;
 
+export const updateRoomMutation = /* GraphQL */ `
+  mutation UpdateRoom($input: UpdateRoomInput!) {
+    updateRoom(input: $input) {
+      id
+      name
+      nameAr
+      x
+      y
+      width
+      height
+      status
+      updatedAt
+    }
+  }
+`;
+
+export const deleteRoomMutation = /* GraphQL */ `
+  mutation DeleteRoom($input: DeleteRoomInput!) {
+    deleteRoom(input: $input) {
+      id
+    }
+  }
+`;
+
 // Tasks
-export const listTasks = /* GraphQL */ `
-  query ListTasks($filter: ModelTaskFilterInput) {
-    listTasks(filter: $filter) {
+export const listTasksByHome = /* GraphQL */ `
+  query ListTasksByHome($homeId: ID!) {
+    tasksByHomeId(homeId: $homeId) {
       items {
         id
+        homeId
+        homeOwners
         roomId
         assignedTo
+        assignedToName
+        createdBy
         title
+        titleAr
         type
         status
         priority
         estimatedTime
-        createdAt
-        updatedAt
-      }
-    }
-  }
-`;
-
-export const createTask = /* GraphQL */ `
-  mutation CreateTask($input: CreateTaskInput!) {
-    createTask(input: $input) {
-      id
-      roomId
-      assignedTo
-      title
-      type
-      status
-      priority
-      estimatedTime
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-export const updateTask = /* GraphQL */ `
-  mutation UpdateTask($input: UpdateTaskInput!) {
-    updateTask(input: $input) {
-      id
-      status
-      updatedAt
-    }
-  }
-`;
-
-export const deleteTask = /* GraphQL */ `
-  mutation DeleteTask($input: DeleteTaskInput!) {
-    deleteTask(input: $input) {
-      id
-    }
-  }
-`;
-
-// Household Tasks
-export const listHouseholdTasks = /* GraphQL */ `
-  query ListHouseholdTasks($filter: ModelHouseholdTaskFilterInput) {
-    listHouseholdTasks(filter: $filter) {
-      items {
-        id
-        userId
-        title
-        titleAr
-        type
-        assignedTo
         dueDate
-        amount
-        priority
-        status
-        provider
+        completedAt
+        completedBy
         notes
         createdAt
         updatedAt
@@ -122,26 +100,154 @@ export const listHouseholdTasks = /* GraphQL */ `
   }
 `;
 
-export const createHouseholdTask = /* GraphQL */ `
+export const listTasksByAssignee = /* GraphQL */ `
+  query ListTasksByAssignee($assignedTo: ID!) {
+    tasksByAssignedTo(assignedTo: $assignedTo) {
+      items {
+        id
+        homeId
+        homeOwners
+        roomId
+        assignedTo
+        assignedToName
+        createdBy
+        title
+        titleAr
+        type
+        status
+        priority
+        estimatedTime
+        dueDate
+        completedAt
+        completedBy
+        notes
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+
+export const createTaskMutation = /* GraphQL */ `
+  mutation CreateTask($input: CreateTaskInput!) {
+    createTask(input: $input) {
+      id
+      homeId
+      homeOwners
+      roomId
+      assignedTo
+      assignedToName
+      createdBy
+      title
+      titleAr
+      type
+      status
+      priority
+      estimatedTime
+      dueDate
+      notes
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const updateTaskMutation = /* GraphQL */ `
+  mutation UpdateTask($input: UpdateTaskInput!) {
+    updateTask(input: $input) {
+      id
+      status
+      completedAt
+      completedBy
+      updatedAt
+    }
+  }
+`;
+
+export const deleteTaskMutation = /* GraphQL */ `
+  mutation DeleteTask($input: DeleteTaskInput!) {
+    deleteTask(input: $input) {
+      id
+    }
+  }
+`;
+
+// Household Tasks
+export const listHouseholdTasksByHome = /* GraphQL */ `
+  query ListHouseholdTasksByHome($homeId: ID!) {
+    householdTasksByHomeId(homeId: $homeId) {
+      items {
+        id
+        homeId
+        homeOwners
+        title
+        titleAr
+        type
+        assignedTo
+        assignedToName
+        dueDate
+        amount
+        priority
+        status
+        provider
+        notes
+        isFinancial
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+
+export const createHouseholdTaskMutation = /* GraphQL */ `
   mutation CreateHouseholdTask($input: CreateHouseholdTaskInput!) {
     createHouseholdTask(input: $input) {
       id
+      homeId
       title
+      titleAr
       type
+      assignedTo
+      dueDate
+      amount
+      priority
       status
+      provider
+      notes
+      isFinancial
       createdAt
     }
   }
 `;
 
+export const updateHouseholdTaskMutation = /* GraphQL */ `
+  mutation UpdateHouseholdTask($input: UpdateHouseholdTaskInput!) {
+    updateHouseholdTask(input: $input) {
+      id
+      status
+      updatedAt
+    }
+  }
+`;
+
+export const deleteHouseholdTaskMutation = /* GraphQL */ `
+  mutation DeleteHouseholdTask($input: DeleteHouseholdTaskInput!) {
+    deleteHouseholdTask(input: $input) {
+      id
+    }
+  }
+`;
+
 // Tickets
-export const listTickets = /* GraphQL */ `
-  query ListTickets($filter: ModelTicketFilterInput) {
-    listTickets(filter: $filter) {
+export const listTicketsByHome = /* GraphQL */ `
+  query ListTicketsByHome($homeId: ID!) {
+    ticketsByHomeId(homeId: $homeId) {
       items {
         id
-        userId
+        homeId
+        homeOwners
         fromUser
+        fromUserName
         title
         description
         status
@@ -153,10 +259,13 @@ export const listTickets = /* GraphQL */ `
   }
 `;
 
-export const createTicket = /* GraphQL */ `
+export const createTicketMutation = /* GraphQL */ `
   mutation CreateTicket($input: CreateTicketInput!) {
     createTicket(input: $input) {
       id
+      homeId
+      fromUser
+      fromUserName
       title
       description
       status
@@ -166,17 +275,29 @@ export const createTicket = /* GraphQL */ `
   }
 `;
 
+export const updateTicketMutation = /* GraphQL */ `
+  mutation UpdateTicket($input: UpdateTicketInput!) {
+    updateTicket(input: $input) {
+      id
+      status
+      updatedAt
+    }
+  }
+`;
+
 // Assets
-export const listAssets = /* GraphQL */ `
-  query ListAssets($filter: ModelAssetFilterInput) {
-    listAssets(filter: $filter) {
+export const listAssetsByHome = /* GraphQL */ `
+  query ListAssetsByHome($homeId: ID!) {
+    assetsByHomeId(homeId: $homeId) {
       items {
         id
-        userId
+        homeId
+        homeOwners
         name
         nameAr
         category
         location
+        roomId
         purchaseDate
         warranty
         value
@@ -188,32 +309,64 @@ export const listAssets = /* GraphQL */ `
   }
 `;
 
-export const createAsset = /* GraphQL */ `
+export const createAssetMutation = /* GraphQL */ `
   mutation CreateAsset($input: CreateAssetInput!) {
     createAsset(input: $input) {
       id
+      homeId
       name
+      nameAr
       category
       location
+      roomId
+      purchaseDate
+      warranty
       value
+      receiptUrl
       createdAt
     }
   }
 `;
 
+export const updateAssetMutation = /* GraphQL */ `
+  mutation UpdateAsset($input: UpdateAssetInput!) {
+    updateAsset(input: $input) {
+      id
+      name
+      category
+      location
+      value
+      updatedAt
+    }
+  }
+`;
+
+export const deleteAssetMutation = /* GraphQL */ `
+  mutation DeleteAsset($input: DeleteAssetInput!) {
+    deleteAsset(input: $input) {
+      id
+    }
+  }
+`;
+
 // Bookings
-export const listBookings = /* GraphQL */ `
-  query ListBookings($filter: ModelBookingFilterInput) {
-    listBookings(filter: $filter) {
+export const listBookingsByHome = /* GraphQL */ `
+  query ListBookingsByHome($homeId: ID!) {
+    bookingsByHomeId(homeId: $homeId) {
       items {
         id
-        userId
+        homeId
+        homeOwners
+        bookedBy
+        bookedByName
         serviceId
         serviceName
+        serviceType
         date
         time
         price
         status
+        notes
         createdAt
         updatedAt
       }
@@ -221,16 +374,31 @@ export const listBookings = /* GraphQL */ `
   }
 `;
 
-export const createBooking = /* GraphQL */ `
+export const createBookingMutation = /* GraphQL */ `
   mutation CreateBooking($input: CreateBookingInput!) {
     createBooking(input: $input) {
       id
+      homeId
+      bookedBy
+      bookedByName
       serviceName
+      serviceType
       date
       time
       price
       status
+      notes
       createdAt
+    }
+  }
+`;
+
+export const updateBookingMutation = /* GraphQL */ `
+  mutation UpdateBooking($input: UpdateBookingInput!) {
+    updateBooking(input: $input) {
+      id
+      status
+      updatedAt
     }
   }
 `;
@@ -240,24 +408,31 @@ export const createBooking = /* GraphQL */ `
 // ==========================================
 
 // Rooms
-export async function fetchRooms() {
+export async function fetchRooms(homeId) {
+  if (!homeId) throw new Error('Home ID is required');
   try {
     const result = await client.graphql({
-      query: listRooms,
+      query: listRoomsByHome,
+      variables: { homeId }
     });
-    return result.data.listRooms.items;
+    return result.data.roomsByHomeId?.items || [];
   } catch (error) {
     console.error('Error fetching rooms:', error);
     throw error;
   }
 }
 
-export async function addRoom(roomData) {
+export async function addRoom(roomData, homeId, homeOwners) {
+  if (!homeId) throw new Error('Home ID is required');
   try {
     const result = await client.graphql({
-      query: createRoom,
+      query: createRoomMutation,
       variables: {
-        input: roomData
+        input: {
+          ...roomData,
+          homeId,
+          homeOwners
+        }
       }
     });
     return result.data.createRoom;
@@ -267,15 +442,48 @@ export async function addRoom(roomData) {
   }
 }
 
-// Tasks
-export async function fetchTasks(roomId = null) {
+export async function updateRoom(roomId, roomData) {
   try {
-    const filter = roomId ? { roomId: { eq: roomId } } : undefined;
     const result = await client.graphql({
-      query: listTasks,
-      variables: { filter }
+      query: updateRoomMutation,
+      variables: {
+        input: {
+          id: roomId,
+          ...roomData
+        }
+      }
     });
-    return result.data.listTasks.items;
+    return result.data.updateRoom;
+  } catch (error) {
+    console.error('Error updating room:', error);
+    throw error;
+  }
+}
+
+export async function removeRoom(roomId) {
+  try {
+    const result = await client.graphql({
+      query: deleteRoomMutation,
+      variables: {
+        input: { id: roomId }
+      }
+    });
+    return result.data.deleteRoom;
+  } catch (error) {
+    console.error('Error deleting room:', error);
+    throw error;
+  }
+}
+
+// Tasks
+export async function fetchTasks(homeId) {
+  if (!homeId) throw new Error('Home ID is required');
+  try {
+    const result = await client.graphql({
+      query: listTasksByHome,
+      variables: { homeId }
+    });
+    return result.data.tasksByHomeId?.items || [];
   } catch (error) {
     console.error('Error fetching tasks:', error);
     throw error;
@@ -283,28 +491,31 @@ export async function fetchTasks(roomId = null) {
 }
 
 export async function fetchUserTasks(userId) {
+  if (!userId) throw new Error('User ID is required');
   try {
     const result = await client.graphql({
-      query: listTasks,
-      variables: {
-        filter: {
-          assignedTo: { eq: userId }
-        }
-      }
+      query: listTasksByAssignee,
+      variables: { assignedTo: userId }
     });
-    return result.data.listTasks.items;
+    return result.data.tasksByAssignedTo?.items || [];
   } catch (error) {
     console.error('Error fetching user tasks:', error);
     throw error;
   }
 }
 
-export async function addTask(taskData) {
+export async function addTask(taskData, homeId, homeOwners, createdBy) {
+  if (!homeId) throw new Error('Home ID is required');
   try {
     const result = await client.graphql({
-      query: createTask,
+      query: createTaskMutation,
       variables: {
-        input: taskData
+        input: {
+          ...taskData,
+          homeId,
+          homeOwners,
+          createdBy
+        }
       }
     });
     return result.data.createTask;
@@ -314,14 +525,34 @@ export async function addTask(taskData) {
   }
 }
 
-export async function completeTask(taskId) {
+export async function completeTask(taskId, completedBy) {
   try {
     const result = await client.graphql({
-      query: updateTask,
+      query: updateTaskMutation,
       variables: {
         input: {
           id: taskId,
-          status: 'completed'
+          status: 'completed',
+          completedAt: new Date().toISOString(),
+          completedBy
+        }
+      }
+    });
+    return result.data.updateTask;
+  } catch (error) {
+    console.error('Error updating task:', error);
+    throw error;
+  }
+}
+
+export async function updateTask(taskId, taskData) {
+  try {
+    const result = await client.graphql({
+      query: updateTaskMutation,
+      variables: {
+        input: {
+          id: taskId,
+          ...taskData
         }
       }
     });
@@ -335,7 +566,7 @@ export async function completeTask(taskId) {
 export async function removeTask(taskId) {
   try {
     const result = await client.graphql({
-      query: deleteTask,
+      query: deleteTaskMutation,
       variables: {
         input: { id: taskId }
       }
@@ -348,24 +579,31 @@ export async function removeTask(taskId) {
 }
 
 // Household Tasks
-export async function fetchHouseholdTasks() {
+export async function fetchHouseholdTasks(homeId) {
+  if (!homeId) throw new Error('Home ID is required');
   try {
     const result = await client.graphql({
-      query: listHouseholdTasks,
+      query: listHouseholdTasksByHome,
+      variables: { homeId }
     });
-    return result.data.listHouseholdTasks.items;
+    return result.data.householdTasksByHomeId?.items || [];
   } catch (error) {
     console.error('Error fetching household tasks:', error);
     throw error;
   }
 }
 
-export async function addHouseholdTask(taskData) {
+export async function addHouseholdTask(taskData, homeId, homeOwners) {
+  if (!homeId) throw new Error('Home ID is required');
   try {
     const result = await client.graphql({
-      query: createHouseholdTask,
+      query: createHouseholdTaskMutation,
       variables: {
-        input: taskData
+        input: {
+          ...taskData,
+          homeId,
+          homeOwners
+        }
       }
     });
     return result.data.createHouseholdTask;
@@ -375,25 +613,65 @@ export async function addHouseholdTask(taskData) {
   }
 }
 
-// Tickets
-export async function fetchTickets() {
+export async function updateHouseholdTask(taskId, taskData) {
   try {
     const result = await client.graphql({
-      query: listTickets,
+      query: updateHouseholdTaskMutation,
+      variables: {
+        input: {
+          id: taskId,
+          ...taskData
+        }
+      }
     });
-    return result.data.listTickets.items;
+    return result.data.updateHouseholdTask;
+  } catch (error) {
+    console.error('Error updating household task:', error);
+    throw error;
+  }
+}
+
+export async function removeHouseholdTask(taskId) {
+  try {
+    const result = await client.graphql({
+      query: deleteHouseholdTaskMutation,
+      variables: {
+        input: { id: taskId }
+      }
+    });
+    return result.data.deleteHouseholdTask;
+  } catch (error) {
+    console.error('Error deleting household task:', error);
+    throw error;
+  }
+}
+
+// Tickets
+export async function fetchTickets(homeId) {
+  if (!homeId) throw new Error('Home ID is required');
+  try {
+    const result = await client.graphql({
+      query: listTicketsByHome,
+      variables: { homeId }
+    });
+    return result.data.ticketsByHomeId?.items || [];
   } catch (error) {
     console.error('Error fetching tickets:', error);
     throw error;
   }
 }
 
-export async function addTicket(ticketData) {
+export async function addTicket(ticketData, homeId, homeOwners) {
+  if (!homeId) throw new Error('Home ID is required');
   try {
     const result = await client.graphql({
-      query: createTicket,
+      query: createTicketMutation,
       variables: {
-        input: ticketData
+        input: {
+          ...ticketData,
+          homeId,
+          homeOwners
+        }
       }
     });
     return result.data.createTicket;
@@ -403,25 +681,50 @@ export async function addTicket(ticketData) {
   }
 }
 
-// Assets
-export async function fetchAssets() {
+export async function updateTicket(ticketId, ticketData) {
   try {
     const result = await client.graphql({
-      query: listAssets,
+      query: updateTicketMutation,
+      variables: {
+        input: {
+          id: ticketId,
+          ...ticketData
+        }
+      }
     });
-    return result.data.listAssets.items;
+    return result.data.updateTicket;
+  } catch (error) {
+    console.error('Error updating ticket:', error);
+    throw error;
+  }
+}
+
+// Assets
+export async function fetchAssets(homeId) {
+  if (!homeId) throw new Error('Home ID is required');
+  try {
+    const result = await client.graphql({
+      query: listAssetsByHome,
+      variables: { homeId }
+    });
+    return result.data.assetsByHomeId?.items || [];
   } catch (error) {
     console.error('Error fetching assets:', error);
     throw error;
   }
 }
 
-export async function addAsset(assetData) {
+export async function addAsset(assetData, homeId, homeOwners) {
+  if (!homeId) throw new Error('Home ID is required');
   try {
     const result = await client.graphql({
-      query: createAsset,
+      query: createAssetMutation,
       variables: {
-        input: assetData
+        input: {
+          ...assetData,
+          homeId,
+          homeOwners
+        }
       }
     });
     return result.data.createAsset;
@@ -431,30 +734,88 @@ export async function addAsset(assetData) {
   }
 }
 
-// Bookings
-export async function fetchBookings() {
+export async function updateAsset(assetId, assetData) {
   try {
     const result = await client.graphql({
-      query: listBookings,
+      query: updateAssetMutation,
+      variables: {
+        input: {
+          id: assetId,
+          ...assetData
+        }
+      }
     });
-    return result.data.listBookings.items;
+    return result.data.updateAsset;
+  } catch (error) {
+    console.error('Error updating asset:', error);
+    throw error;
+  }
+}
+
+export async function removeAsset(assetId) {
+  try {
+    const result = await client.graphql({
+      query: deleteAssetMutation,
+      variables: {
+        input: { id: assetId }
+      }
+    });
+    return result.data.deleteAsset;
+  } catch (error) {
+    console.error('Error deleting asset:', error);
+    throw error;
+  }
+}
+
+// Bookings
+export async function fetchBookings(homeId) {
+  if (!homeId) throw new Error('Home ID is required');
+  try {
+    const result = await client.graphql({
+      query: listBookingsByHome,
+      variables: { homeId }
+    });
+    return result.data.bookingsByHomeId?.items || [];
   } catch (error) {
     console.error('Error fetching bookings:', error);
     throw error;
   }
 }
 
-export async function addBooking(bookingData) {
+export async function addBooking(bookingData, homeId, homeOwners) {
+  if (!homeId) throw new Error('Home ID is required');
   try {
     const result = await client.graphql({
-      query: createBooking,
+      query: createBookingMutation,
       variables: {
-        input: bookingData
+        input: {
+          ...bookingData,
+          homeId,
+          homeOwners
+        }
       }
     });
     return result.data.createBooking;
   } catch (error) {
     console.error('Error creating booking:', error);
+    throw error;
+  }
+}
+
+export async function updateBooking(bookingId, bookingData) {
+  try {
+    const result = await client.graphql({
+      query: updateBookingMutation,
+      variables: {
+        input: {
+          id: bookingId,
+          ...bookingData
+        }
+      }
+    });
+    return result.data.updateBooking;
+  } catch (error) {
+    console.error('Error updating booking:', error);
     throw error;
   }
 }

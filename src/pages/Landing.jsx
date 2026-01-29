@@ -156,7 +156,7 @@ function Landing() {
               >
                 <div className="bg-white rounded-3xl p-8 shadow-2xl inline-block">
                   <img
-                    src="/Abjad/images/Full Abjad Logo.png"
+                    src="/images/Full Abjad Logo.png"
                     alt="Abjad Logo"
                     className="h-20 md:h-28 w-auto"
                   />
@@ -224,7 +224,7 @@ function Landing() {
               >
                 <div className="h-px w-12 bg-white/30" />
                 <p className="text-white/60 text-sm font-medium">A subsidiary of</p>
-                <img src="/Abjad/images/Hawaz Logo.png" alt="Hawaz Consulting" className="h-7 opacity-90" />
+                <img src="/images/Hawaz Logo.png" alt="Hawaz Consulting" className="h-7 opacity-90" />
               </motion.div>
             </motion.div>
 
@@ -515,7 +515,7 @@ function Landing() {
           <div className="grid md:grid-cols-3 gap-12 mb-12">
             <div>
               <img
-                src="/Abjad/images/Full Abjad Logo.png"
+                src="/images/Full Abjad Logo.png"
                 alt="Abjad Logo"
                 className="h-16 w-auto mb-6"
               />
@@ -543,7 +543,7 @@ function Landing() {
             <div>
               <h4 className="font-bold mb-4" style={{ color: COLORS.depth }}>About</h4>
               <p className="text-gray-600 mb-4">A subsidiary of Hawaz Consulting, bringing world-class management solutions to Saudi homes.</p>
-              <img src="/Abjad/images/Hawaz Logo.png" alt="Hawaz Consulting" className="h-8 opacity-90" />
+              <img src="/images/Hawaz Logo.png" alt="Hawaz Consulting" className="h-8 opacity-90" />
             </div>
           </div>
 
@@ -551,7 +551,7 @@ function Landing() {
             <p className="text-gray-600 text-sm">
               © 2024 Abjad. All rights reserved.
             </p>
-            <img src="/Abjad/images/Hawaz Logo.png" alt="Hawaz Consulting" className="h-6 opacity-80" />
+            <img src="/images/Hawaz Logo.png" alt="Hawaz Consulting" className="h-6 opacity-80" />
           </div>
         </div>
       </footer>

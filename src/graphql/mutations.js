@@ -1,6 +1,333 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createHome = /* GraphQL */ `
+  mutation CreateHome(
+    $input: CreateHomeInput!
+    $condition: ModelHomeConditionInput
+  ) {
+    createHome(input: $input, condition: $condition) {
+      id
+      name
+      nameAr
+      owners
+      inviteCode
+      inviteCodeExpiry
+      maxMembers
+      createdBy
+      members {
+        nextToken
+        startedAt
+        __typename
+      }
+      invites {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const updateHome = /* GraphQL */ `
+  mutation UpdateHome(
+    $input: UpdateHomeInput!
+    $condition: ModelHomeConditionInput
+  ) {
+    updateHome(input: $input, condition: $condition) {
+      id
+      name
+      nameAr
+      owners
+      inviteCode
+      inviteCodeExpiry
+      maxMembers
+      createdBy
+      members {
+        nextToken
+        startedAt
+        __typename
+      }
+      invites {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const deleteHome = /* GraphQL */ `
+  mutation DeleteHome(
+    $input: DeleteHomeInput!
+    $condition: ModelHomeConditionInput
+  ) {
+    deleteHome(input: $input, condition: $condition) {
+      id
+      name
+      nameAr
+      owners
+      inviteCode
+      inviteCodeExpiry
+      maxMembers
+      createdBy
+      members {
+        nextToken
+        startedAt
+        __typename
+      }
+      invites {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const createHomeMember = /* GraphQL */ `
+  mutation CreateHomeMember(
+    $input: CreateHomeMemberInput!
+    $condition: ModelHomeMemberConditionInput
+  ) {
+    createHomeMember(input: $input, condition: $condition) {
+      id
+      homeId
+      visibleToMembers
+      userId
+      cognitoUsername
+      email
+      name
+      nameAr
+      phone
+      avatar
+      role
+      permissions {
+        canViewAllTasks
+        canViewAssignedTasks
+        canCreateTasks
+        canCompleteTasks
+        canAssignTasks
+        canViewBills
+        canManageBills
+        canViewAssets
+        canManageAssets
+        canViewBookings
+        canCreateBookings
+        canViewAllBookings
+        canManageMembers
+        canViewRooms
+        canManageRooms
+        __typename
+      }
+      homeOwners
+      invitedBy
+      invitedAt
+      acceptedAt
+      status
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateHomeMember = /* GraphQL */ `
+  mutation UpdateHomeMember(
+    $input: UpdateHomeMemberInput!
+    $condition: ModelHomeMemberConditionInput
+  ) {
+    updateHomeMember(input: $input, condition: $condition) {
+      id
+      homeId
+      visibleToMembers
+      userId
+      cognitoUsername
+      email
+      name
+      nameAr
+      phone
+      avatar
+      role
+      permissions {
+        canViewAllTasks
+        canViewAssignedTasks
+        canCreateTasks
+        canCompleteTasks
+        canAssignTasks
+        canViewBills
+        canManageBills
+        canViewAssets
+        canManageAssets
+        canViewBookings
+        canCreateBookings
+        canViewAllBookings
+        canManageMembers
+        canViewRooms
+        canManageRooms
+        __typename
+      }
+      homeOwners
+      invitedBy
+      invitedAt
+      acceptedAt
+      status
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteHomeMember = /* GraphQL */ `
+  mutation DeleteHomeMember(
+    $input: DeleteHomeMemberInput!
+    $condition: ModelHomeMemberConditionInput
+  ) {
+    deleteHomeMember(input: $input, condition: $condition) {
+      id
+      homeId
+      visibleToMembers
+      userId
+      cognitoUsername
+      email
+      name
+      nameAr
+      phone
+      avatar
+      role
+      permissions {
+        canViewAllTasks
+        canViewAssignedTasks
+        canCreateTasks
+        canCompleteTasks
+        canAssignTasks
+        canViewBills
+        canManageBills
+        canViewAssets
+        canManageAssets
+        canViewBookings
+        canCreateBookings
+        canViewAllBookings
+        canManageMembers
+        canViewRooms
+        canManageRooms
+        __typename
+      }
+      homeOwners
+      invitedBy
+      invitedAt
+      acceptedAt
+      status
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const createHomeInvite = /* GraphQL */ `
+  mutation CreateHomeInvite(
+    $input: CreateHomeInviteInput!
+    $condition: ModelHomeInviteConditionInput
+  ) {
+    createHomeInvite(input: $input, condition: $condition) {
+      id
+      homeId
+      homeName
+      email
+      role
+      homeOwners
+      invitedBy
+      invitedByName
+      status
+      expiresAt
+      customPermissions
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const updateHomeInvite = /* GraphQL */ `
+  mutation UpdateHomeInvite(
+    $input: UpdateHomeInviteInput!
+    $condition: ModelHomeInviteConditionInput
+  ) {
+    updateHomeInvite(input: $input, condition: $condition) {
+      id
+      homeId
+      homeName
+      email
+      role
+      homeOwners
+      invitedBy
+      invitedByName
+      status
+      expiresAt
+      customPermissions
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const deleteHomeInvite = /* GraphQL */ `
+  mutation DeleteHomeInvite(
+    $input: DeleteHomeInviteInput!
+    $condition: ModelHomeInviteConditionInput
+  ) {
+    deleteHomeInvite(input: $input, condition: $condition) {
+      id
+      homeId
+      homeName
+      email
+      role
+      homeOwners
+      invitedBy
+      invitedByName
+      status
+      expiresAt
+      customPermissions
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -12,20 +339,8 @@ export const createUser = /* GraphQL */ `
       name
       nameAr
       phone
-      role
       avatar
-      canViewBills
-      canManageMembers
-      rooms {
-        nextToken
-        startedAt
-        __typename
-      }
-      tasks {
-        nextToken
-        startedAt
-        __typename
-      }
+      currentHomeId
       createdAt
       updatedAt
       _version
@@ -47,20 +362,8 @@ export const updateUser = /* GraphQL */ `
       name
       nameAr
       phone
-      role
       avatar
-      canViewBills
-      canManageMembers
-      rooms {
-        nextToken
-        startedAt
-        __typename
-      }
-      tasks {
-        nextToken
-        startedAt
-        __typename
-      }
+      currentHomeId
       createdAt
       updatedAt
       _version
@@ -82,20 +385,8 @@ export const deleteUser = /* GraphQL */ `
       name
       nameAr
       phone
-      role
       avatar
-      canViewBills
-      canManageMembers
-      rooms {
-        nextToken
-        startedAt
-        __typename
-      }
-      tasks {
-        nextToken
-        startedAt
-        __typename
-      }
+      currentHomeId
       createdAt
       updatedAt
       _version
@@ -113,8 +404,10 @@ export const createRoom = /* GraphQL */ `
   ) {
     createRoom(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       name
+      nameAr
       x
       y
       width
@@ -130,7 +423,6 @@ export const createRoom = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -142,8 +434,10 @@ export const updateRoom = /* GraphQL */ `
   ) {
     updateRoom(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       name
+      nameAr
       x
       y
       width
@@ -159,7 +453,6 @@ export const updateRoom = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -171,8 +464,10 @@ export const deleteRoom = /* GraphQL */ `
   ) {
     deleteRoom(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       name
+      nameAr
       x
       y
       width
@@ -188,7 +483,6 @@ export const deleteRoom = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -200,19 +494,27 @@ export const createTask = /* GraphQL */ `
   ) {
     createTask(input: $input, condition: $condition) {
       id
+      homeId
+      homeOwners
       roomId
       assignedTo
+      assignedToName
+      createdBy
       title
+      titleAr
       type
       status
       priority
       estimatedTime
+      dueDate
+      completedAt
+      completedBy
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -224,19 +526,27 @@ export const updateTask = /* GraphQL */ `
   ) {
     updateTask(input: $input, condition: $condition) {
       id
+      homeId
+      homeOwners
       roomId
       assignedTo
+      assignedToName
+      createdBy
       title
+      titleAr
       type
       status
       priority
       estimatedTime
+      dueDate
+      completedAt
+      completedBy
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -248,19 +558,27 @@ export const deleteTask = /* GraphQL */ `
   ) {
     deleteTask(input: $input, condition: $condition) {
       id
+      homeId
+      homeOwners
       roomId
       assignedTo
+      assignedToName
+      createdBy
       title
+      titleAr
       type
       status
       priority
       estimatedTime
+      dueDate
+      completedAt
+      completedBy
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -272,23 +590,25 @@ export const createHouseholdTask = /* GraphQL */ `
   ) {
     createHouseholdTask(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       title
       titleAr
       type
       assignedTo
+      assignedToName
       dueDate
       amount
       priority
       status
       provider
       notes
+      isFinancial
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -300,23 +620,25 @@ export const updateHouseholdTask = /* GraphQL */ `
   ) {
     updateHouseholdTask(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       title
       titleAr
       type
       assignedTo
+      assignedToName
       dueDate
       amount
       priority
       status
       provider
       notes
+      isFinancial
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -328,23 +650,25 @@ export const deleteHouseholdTask = /* GraphQL */ `
   ) {
     deleteHouseholdTask(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       title
       titleAr
       type
       assignedTo
+      assignedToName
       dueDate
       amount
       priority
       status
       provider
       notes
+      isFinancial
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -356,8 +680,10 @@ export const createTicket = /* GraphQL */ `
   ) {
     createTicket(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       fromUser
+      fromUserName
       title
       description
       status
@@ -367,7 +693,6 @@ export const createTicket = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -379,8 +704,10 @@ export const updateTicket = /* GraphQL */ `
   ) {
     updateTicket(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       fromUser
+      fromUserName
       title
       description
       status
@@ -390,7 +717,6 @@ export const updateTicket = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -402,8 +728,10 @@ export const deleteTicket = /* GraphQL */ `
   ) {
     deleteTicket(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       fromUser
+      fromUserName
       title
       description
       status
@@ -413,7 +741,6 @@ export const deleteTicket = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -425,11 +752,13 @@ export const createAsset = /* GraphQL */ `
   ) {
     createAsset(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       name
       nameAr
       category
       location
+      roomId
       purchaseDate
       warranty
       value
@@ -439,7 +768,6 @@ export const createAsset = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -451,11 +779,13 @@ export const updateAsset = /* GraphQL */ `
   ) {
     updateAsset(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       name
       nameAr
       category
       location
+      roomId
       purchaseDate
       warranty
       value
@@ -465,7 +795,6 @@ export const updateAsset = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -477,11 +806,13 @@ export const deleteAsset = /* GraphQL */ `
   ) {
     deleteAsset(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
       name
       nameAr
       category
       location
+      roomId
       purchaseDate
       warranty
       value
@@ -491,7 +822,6 @@ export const deleteAsset = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -503,19 +833,23 @@ export const createBooking = /* GraphQL */ `
   ) {
     createBooking(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
+      bookedBy
+      bookedByName
       serviceId
       serviceName
+      serviceType
       date
       time
       price
       status
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -527,19 +861,23 @@ export const updateBooking = /* GraphQL */ `
   ) {
     updateBooking(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
+      bookedBy
+      bookedByName
       serviceId
       serviceName
+      serviceType
       date
       time
       price
       status
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -551,19 +889,23 @@ export const deleteBooking = /* GraphQL */ `
   ) {
     deleteBooking(input: $input, condition: $condition) {
       id
-      userId
+      homeId
+      homeOwners
+      bookedBy
+      bookedByName
       serviceId
       serviceName
+      serviceType
       date
       time
       price
       status
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }

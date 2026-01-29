@@ -1,6 +1,321 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateHome = /* GraphQL */ `
+  subscription OnCreateHome($filter: ModelSubscriptionHomeFilterInput) {
+    onCreateHome(filter: $filter) {
+      id
+      name
+      nameAr
+      owners
+      inviteCode
+      inviteCodeExpiry
+      maxMembers
+      createdBy
+      members {
+        nextToken
+        startedAt
+        __typename
+      }
+      invites {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateHome = /* GraphQL */ `
+  subscription OnUpdateHome($filter: ModelSubscriptionHomeFilterInput) {
+    onUpdateHome(filter: $filter) {
+      id
+      name
+      nameAr
+      owners
+      inviteCode
+      inviteCodeExpiry
+      maxMembers
+      createdBy
+      members {
+        nextToken
+        startedAt
+        __typename
+      }
+      invites {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteHome = /* GraphQL */ `
+  subscription OnDeleteHome($filter: ModelSubscriptionHomeFilterInput) {
+    onDeleteHome(filter: $filter) {
+      id
+      name
+      nameAr
+      owners
+      inviteCode
+      inviteCodeExpiry
+      maxMembers
+      createdBy
+      members {
+        nextToken
+        startedAt
+        __typename
+      }
+      invites {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onCreateHomeMember = /* GraphQL */ `
+  subscription OnCreateHomeMember(
+    $filter: ModelSubscriptionHomeMemberFilterInput
+    $owner: String
+  ) {
+    onCreateHomeMember(filter: $filter, owner: $owner) {
+      id
+      homeId
+      visibleToMembers
+      userId
+      cognitoUsername
+      email
+      name
+      nameAr
+      phone
+      avatar
+      role
+      permissions {
+        canViewAllTasks
+        canViewAssignedTasks
+        canCreateTasks
+        canCompleteTasks
+        canAssignTasks
+        canViewBills
+        canManageBills
+        canViewAssets
+        canManageAssets
+        canViewBookings
+        canCreateBookings
+        canViewAllBookings
+        canManageMembers
+        canViewRooms
+        canManageRooms
+        __typename
+      }
+      homeOwners
+      invitedBy
+      invitedAt
+      acceptedAt
+      status
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onUpdateHomeMember = /* GraphQL */ `
+  subscription OnUpdateHomeMember(
+    $filter: ModelSubscriptionHomeMemberFilterInput
+    $owner: String
+  ) {
+    onUpdateHomeMember(filter: $filter, owner: $owner) {
+      id
+      homeId
+      visibleToMembers
+      userId
+      cognitoUsername
+      email
+      name
+      nameAr
+      phone
+      avatar
+      role
+      permissions {
+        canViewAllTasks
+        canViewAssignedTasks
+        canCreateTasks
+        canCompleteTasks
+        canAssignTasks
+        canViewBills
+        canManageBills
+        canViewAssets
+        canManageAssets
+        canViewBookings
+        canCreateBookings
+        canViewAllBookings
+        canManageMembers
+        canViewRooms
+        canManageRooms
+        __typename
+      }
+      homeOwners
+      invitedBy
+      invitedAt
+      acceptedAt
+      status
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onDeleteHomeMember = /* GraphQL */ `
+  subscription OnDeleteHomeMember(
+    $filter: ModelSubscriptionHomeMemberFilterInput
+    $owner: String
+  ) {
+    onDeleteHomeMember(filter: $filter, owner: $owner) {
+      id
+      homeId
+      visibleToMembers
+      userId
+      cognitoUsername
+      email
+      name
+      nameAr
+      phone
+      avatar
+      role
+      permissions {
+        canViewAllTasks
+        canViewAssignedTasks
+        canCreateTasks
+        canCompleteTasks
+        canAssignTasks
+        canViewBills
+        canManageBills
+        canViewAssets
+        canManageAssets
+        canViewBookings
+        canCreateBookings
+        canViewAllBookings
+        canManageMembers
+        canViewRooms
+        canManageRooms
+        __typename
+      }
+      homeOwners
+      invitedBy
+      invitedAt
+      acceptedAt
+      status
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onCreateHomeInvite = /* GraphQL */ `
+  subscription OnCreateHomeInvite(
+    $filter: ModelSubscriptionHomeInviteFilterInput
+  ) {
+    onCreateHomeInvite(filter: $filter) {
+      id
+      homeId
+      homeName
+      email
+      role
+      homeOwners
+      invitedBy
+      invitedByName
+      status
+      expiresAt
+      customPermissions
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateHomeInvite = /* GraphQL */ `
+  subscription OnUpdateHomeInvite(
+    $filter: ModelSubscriptionHomeInviteFilterInput
+  ) {
+    onUpdateHomeInvite(filter: $filter) {
+      id
+      homeId
+      homeName
+      email
+      role
+      homeOwners
+      invitedBy
+      invitedByName
+      status
+      expiresAt
+      customPermissions
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteHomeInvite = /* GraphQL */ `
+  subscription OnDeleteHomeInvite(
+    $filter: ModelSubscriptionHomeInviteFilterInput
+  ) {
+    onDeleteHomeInvite(filter: $filter) {
+      id
+      homeId
+      homeName
+      email
+      role
+      homeOwners
+      invitedBy
+      invitedByName
+      status
+      expiresAt
+      customPermissions
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser(
     $filter: ModelSubscriptionUserFilterInput
@@ -12,20 +327,8 @@ export const onCreateUser = /* GraphQL */ `
       name
       nameAr
       phone
-      role
       avatar
-      canViewBills
-      canManageMembers
-      rooms {
-        nextToken
-        startedAt
-        __typename
-      }
-      tasks {
-        nextToken
-        startedAt
-        __typename
-      }
+      currentHomeId
       createdAt
       updatedAt
       _version
@@ -47,20 +350,8 @@ export const onUpdateUser = /* GraphQL */ `
       name
       nameAr
       phone
-      role
       avatar
-      canViewBills
-      canManageMembers
-      rooms {
-        nextToken
-        startedAt
-        __typename
-      }
-      tasks {
-        nextToken
-        startedAt
-        __typename
-      }
+      currentHomeId
       createdAt
       updatedAt
       _version
@@ -82,20 +373,8 @@ export const onDeleteUser = /* GraphQL */ `
       name
       nameAr
       phone
-      role
       avatar
-      canViewBills
-      canManageMembers
-      rooms {
-        nextToken
-        startedAt
-        __typename
-      }
-      tasks {
-        nextToken
-        startedAt
-        __typename
-      }
+      currentHomeId
       createdAt
       updatedAt
       _version
@@ -107,14 +386,13 @@ export const onDeleteUser = /* GraphQL */ `
   }
 `;
 export const onCreateRoom = /* GraphQL */ `
-  subscription OnCreateRoom(
-    $filter: ModelSubscriptionRoomFilterInput
-    $owner: String
-  ) {
-    onCreateRoom(filter: $filter, owner: $owner) {
+  subscription OnCreateRoom($filter: ModelSubscriptionRoomFilterInput) {
+    onCreateRoom(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       name
+      nameAr
       x
       y
       width
@@ -130,20 +408,18 @@ export const onCreateRoom = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onUpdateRoom = /* GraphQL */ `
-  subscription OnUpdateRoom(
-    $filter: ModelSubscriptionRoomFilterInput
-    $owner: String
-  ) {
-    onUpdateRoom(filter: $filter, owner: $owner) {
+  subscription OnUpdateRoom($filter: ModelSubscriptionRoomFilterInput) {
+    onUpdateRoom(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       name
+      nameAr
       x
       y
       width
@@ -159,20 +435,18 @@ export const onUpdateRoom = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onDeleteRoom = /* GraphQL */ `
-  subscription OnDeleteRoom(
-    $filter: ModelSubscriptionRoomFilterInput
-    $owner: String
-  ) {
-    onDeleteRoom(filter: $filter, owner: $owner) {
+  subscription OnDeleteRoom($filter: ModelSubscriptionRoomFilterInput) {
+    onDeleteRoom(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       name
+      nameAr
       x
       y
       width
@@ -188,79 +462,93 @@ export const onDeleteRoom = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onCreateTask = /* GraphQL */ `
-  subscription OnCreateTask(
-    $filter: ModelSubscriptionTaskFilterInput
-    $owner: String
-  ) {
-    onCreateTask(filter: $filter, owner: $owner) {
+  subscription OnCreateTask($filter: ModelSubscriptionTaskFilterInput) {
+    onCreateTask(filter: $filter) {
       id
+      homeId
+      homeOwners
       roomId
       assignedTo
+      assignedToName
+      createdBy
       title
+      titleAr
       type
       status
       priority
       estimatedTime
+      dueDate
+      completedAt
+      completedBy
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onUpdateTask = /* GraphQL */ `
-  subscription OnUpdateTask(
-    $filter: ModelSubscriptionTaskFilterInput
-    $owner: String
-  ) {
-    onUpdateTask(filter: $filter, owner: $owner) {
+  subscription OnUpdateTask($filter: ModelSubscriptionTaskFilterInput) {
+    onUpdateTask(filter: $filter) {
       id
+      homeId
+      homeOwners
       roomId
       assignedTo
+      assignedToName
+      createdBy
       title
+      titleAr
       type
       status
       priority
       estimatedTime
+      dueDate
+      completedAt
+      completedBy
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onDeleteTask = /* GraphQL */ `
-  subscription OnDeleteTask(
-    $filter: ModelSubscriptionTaskFilterInput
-    $owner: String
-  ) {
-    onDeleteTask(filter: $filter, owner: $owner) {
+  subscription OnDeleteTask($filter: ModelSubscriptionTaskFilterInput) {
+    onDeleteTask(filter: $filter) {
       id
+      homeId
+      homeOwners
       roomId
       assignedTo
+      assignedToName
+      createdBy
       title
+      titleAr
       type
       status
       priority
       estimatedTime
+      dueDate
+      completedAt
+      completedBy
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -268,27 +556,28 @@ export const onDeleteTask = /* GraphQL */ `
 export const onCreateHouseholdTask = /* GraphQL */ `
   subscription OnCreateHouseholdTask(
     $filter: ModelSubscriptionHouseholdTaskFilterInput
-    $owner: String
   ) {
-    onCreateHouseholdTask(filter: $filter, owner: $owner) {
+    onCreateHouseholdTask(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       title
       titleAr
       type
       assignedTo
+      assignedToName
       dueDate
       amount
       priority
       status
       provider
       notes
+      isFinancial
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -296,27 +585,28 @@ export const onCreateHouseholdTask = /* GraphQL */ `
 export const onUpdateHouseholdTask = /* GraphQL */ `
   subscription OnUpdateHouseholdTask(
     $filter: ModelSubscriptionHouseholdTaskFilterInput
-    $owner: String
   ) {
-    onUpdateHouseholdTask(filter: $filter, owner: $owner) {
+    onUpdateHouseholdTask(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       title
       titleAr
       type
       assignedTo
+      assignedToName
       dueDate
       amount
       priority
       status
       provider
       notes
+      isFinancial
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
@@ -324,40 +614,40 @@ export const onUpdateHouseholdTask = /* GraphQL */ `
 export const onDeleteHouseholdTask = /* GraphQL */ `
   subscription OnDeleteHouseholdTask(
     $filter: ModelSubscriptionHouseholdTaskFilterInput
-    $owner: String
   ) {
-    onDeleteHouseholdTask(filter: $filter, owner: $owner) {
+    onDeleteHouseholdTask(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       title
       titleAr
       type
       assignedTo
+      assignedToName
       dueDate
       amount
       priority
       status
       provider
       notes
+      isFinancial
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onCreateTicket = /* GraphQL */ `
-  subscription OnCreateTicket(
-    $filter: ModelSubscriptionTicketFilterInput
-    $owner: String
-  ) {
-    onCreateTicket(filter: $filter, owner: $owner) {
+  subscription OnCreateTicket($filter: ModelSubscriptionTicketFilterInput) {
+    onCreateTicket(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       fromUser
+      fromUserName
       title
       description
       status
@@ -367,20 +657,18 @@ export const onCreateTicket = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onUpdateTicket = /* GraphQL */ `
-  subscription OnUpdateTicket(
-    $filter: ModelSubscriptionTicketFilterInput
-    $owner: String
-  ) {
-    onUpdateTicket(filter: $filter, owner: $owner) {
+  subscription OnUpdateTicket($filter: ModelSubscriptionTicketFilterInput) {
+    onUpdateTicket(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       fromUser
+      fromUserName
       title
       description
       status
@@ -390,20 +678,18 @@ export const onUpdateTicket = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onDeleteTicket = /* GraphQL */ `
-  subscription OnDeleteTicket(
-    $filter: ModelSubscriptionTicketFilterInput
-    $owner: String
-  ) {
-    onDeleteTicket(filter: $filter, owner: $owner) {
+  subscription OnDeleteTicket($filter: ModelSubscriptionTicketFilterInput) {
+    onDeleteTicket(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       fromUser
+      fromUserName
       title
       description
       status
@@ -413,23 +699,21 @@ export const onDeleteTicket = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onCreateAsset = /* GraphQL */ `
-  subscription OnCreateAsset(
-    $filter: ModelSubscriptionAssetFilterInput
-    $owner: String
-  ) {
-    onCreateAsset(filter: $filter, owner: $owner) {
+  subscription OnCreateAsset($filter: ModelSubscriptionAssetFilterInput) {
+    onCreateAsset(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       name
       nameAr
       category
       location
+      roomId
       purchaseDate
       warranty
       value
@@ -439,23 +723,21 @@ export const onCreateAsset = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onUpdateAsset = /* GraphQL */ `
-  subscription OnUpdateAsset(
-    $filter: ModelSubscriptionAssetFilterInput
-    $owner: String
-  ) {
-    onUpdateAsset(filter: $filter, owner: $owner) {
+  subscription OnUpdateAsset($filter: ModelSubscriptionAssetFilterInput) {
+    onUpdateAsset(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       name
       nameAr
       category
       location
+      roomId
       purchaseDate
       warranty
       value
@@ -465,23 +747,21 @@ export const onUpdateAsset = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onDeleteAsset = /* GraphQL */ `
-  subscription OnDeleteAsset(
-    $filter: ModelSubscriptionAssetFilterInput
-    $owner: String
-  ) {
-    onDeleteAsset(filter: $filter, owner: $owner) {
+  subscription OnDeleteAsset($filter: ModelSubscriptionAssetFilterInput) {
+    onDeleteAsset(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
       name
       nameAr
       category
       location
+      roomId
       purchaseDate
       warranty
       value
@@ -491,79 +771,81 @@ export const onDeleteAsset = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onCreateBooking = /* GraphQL */ `
-  subscription OnCreateBooking(
-    $filter: ModelSubscriptionBookingFilterInput
-    $owner: String
-  ) {
-    onCreateBooking(filter: $filter, owner: $owner) {
+  subscription OnCreateBooking($filter: ModelSubscriptionBookingFilterInput) {
+    onCreateBooking(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
+      bookedBy
+      bookedByName
       serviceId
       serviceName
+      serviceType
       date
       time
       price
       status
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onUpdateBooking = /* GraphQL */ `
-  subscription OnUpdateBooking(
-    $filter: ModelSubscriptionBookingFilterInput
-    $owner: String
-  ) {
-    onUpdateBooking(filter: $filter, owner: $owner) {
+  subscription OnUpdateBooking($filter: ModelSubscriptionBookingFilterInput) {
+    onUpdateBooking(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
+      bookedBy
+      bookedByName
       serviceId
       serviceName
+      serviceType
       date
       time
       price
       status
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
 `;
 export const onDeleteBooking = /* GraphQL */ `
-  subscription OnDeleteBooking(
-    $filter: ModelSubscriptionBookingFilterInput
-    $owner: String
-  ) {
-    onDeleteBooking(filter: $filter, owner: $owner) {
+  subscription OnDeleteBooking($filter: ModelSubscriptionBookingFilterInput) {
+    onDeleteBooking(filter: $filter) {
       id
-      userId
+      homeId
+      homeOwners
+      bookedBy
+      bookedByName
       serviceId
       serviceName
+      serviceType
       date
       time
       price
       status
+      notes
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
       __typename
     }
   }
