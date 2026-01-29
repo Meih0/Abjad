@@ -24,8 +24,7 @@ frontend:
           echo "  \"aws_cognito_verification_mechanisms\": [\"EMAIL\"]," >> src/aws-exports.js
           echo "  \"aws_appsync_graphqlEndpoint\": \"$AMPLIFY_APPSYNC_GRAPHQL_ENDPOINT\"," >> src/aws-exports.js
           echo "  \"aws_appsync_region\": \"$AMPLIFY_APPSYNC_REGION\"," >> src/aws-exports.js
-          echo "  \"aws_appsync_authenticationType\": \"API_KEY\"," >> src/aws-exports.js
-          echo "  \"aws_appsync_apiKey\": \"$AMPLIFY_APPSYNC_API_KEY\"" >> src/aws-exports.js
+          echo "  \"aws_appsync_authenticationType\": \"AMAZON_COGNITO_USER_POOLS\"" >> src/aws-exports.js
           echo "};" >> src/aws-exports.js
           echo "export default awsmobile;" >> src/aws-exports.js
     build:
