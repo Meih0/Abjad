@@ -4,29 +4,6 @@ frontend:
     preBuild:
       commands:
         - npm ci
-        - |
-          echo "const awsmobile = {" > src/aws-exports.js
-          echo "  \"aws_project_region\": \"$AMPLIFY_PROJECT_REGION\"," >> src/aws-exports.js
-          echo "  \"aws_cognito_identity_pool_id\": \"$AMPLIFY_COGNITO_IDENTITY_POOL_ID\"," >> src/aws-exports.js
-          echo "  \"aws_cognito_region\": \"$AMPLIFY_COGNITO_REGION\"," >> src/aws-exports.js
-          echo "  \"aws_user_pools_id\": \"$AMPLIFY_USER_POOLS_ID\"," >> src/aws-exports.js
-          echo "  \"aws_user_pools_web_client_id\": \"$AMPLIFY_USER_POOLS_WEB_CLIENT_ID\"," >> src/aws-exports.js
-          echo "  \"oauth\": {}," >> src/aws-exports.js
-          echo "  \"aws_cognito_username_attributes\": [\"EMAIL\"]," >> src/aws-exports.js
-          echo "  \"aws_cognito_social_providers\": []," >> src/aws-exports.js
-          echo "  \"aws_cognito_signup_attributes\": [\"EMAIL\"]," >> src/aws-exports.js
-          echo "  \"aws_cognito_mfa_configuration\": \"OFF\"," >> src/aws-exports.js
-          echo "  \"aws_cognito_mfa_types\": [\"SMS\"]," >> src/aws-exports.js
-          echo "  \"aws_cognito_password_protection_settings\": {" >> src/aws-exports.js
-          echo "    \"passwordPolicyMinLength\": 8," >> src/aws-exports.js
-          echo "    \"passwordPolicyCharacters\": []" >> src/aws-exports.js
-          echo "  }," >> src/aws-exports.js
-          echo "  \"aws_cognito_verification_mechanisms\": [\"EMAIL\"]," >> src/aws-exports.js
-          echo "  \"aws_appsync_graphqlEndpoint\": \"$AMPLIFY_APPSYNC_GRAPHQL_ENDPOINT\"," >> src/aws-exports.js
-          echo "  \"aws_appsync_region\": \"$AMPLIFY_APPSYNC_REGION\"," >> src/aws-exports.js
-          echo "  \"aws_appsync_authenticationType\": \"AMAZON_COGNITO_USER_POOLS\"" >> src/aws-exports.js
-          echo "};" >> src/aws-exports.js
-          echo "export default awsmobile;" >> src/aws-exports.js
     build:
       commands:
         - npm run build
