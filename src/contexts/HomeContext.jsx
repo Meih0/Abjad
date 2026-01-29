@@ -2,7 +2,14 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { generateClient } from 'aws-amplify/api';
 import { useAuth } from './AuthContext';
 
-const client = generateClient();
+// Lazy initialize client to ensure Amplify is configured first
+let client = null;
+function getClient() {
+  if (!client) {
+    client = generateClient();
+  }
+  return client;
+}
 
 const HomeContext = createContext();
 
@@ -364,7 +371,7 @@ export function HomeProvider({ children }) {
       setError(null);
 
       // Find user's home membership
-      const memberResult = await client.graphql({
+      const memberResult = await getClient().graphql({
         query: listHomeMembersByUser,
         variables: { userId: user.userId }
       });
@@ -373,7 +380,7 @@ export function HomeProvider({ children }) {
 
       if (memberships.length === 0) {
         // User has no home, check for pending invites
-        const inviteResult = await client.graphql({
+        const inviteResult = await getClient().graphql({
           query: listHomeInvitesByEmail,
           variables: { email: user.email }
         });
@@ -390,7 +397,7 @@ export function HomeProvider({ children }) {
       setMembership(activeMembership);
 
       // Load the home details
-      const homeResult = await client.graphql({
+      const homeResult = await getClient().graphql({
         query: getHomeQuery,
         variables: { id: activeMembership.homeId }
       });
@@ -398,13 +405,13 @@ export function HomeProvider({ children }) {
 
       // If user is an owner, load all members and pending invites
       if (activeMembership.role === 'OWNER') {
-        const membersResult = await client.graphql({
+        const membersResult = await getClient().graphql({
           query: listHomeMembersByHome,
           variables: { homeId: activeMembership.homeId }
         });
         setMembers(membersResult.data.homeMembersByHomeId?.items || []);
 
-        const invitesResult = await client.graphql({
+        const invitesResult = await getClient().graphql({
           query: listHomeInvitesByHome,
           variables: { homeId: activeMembership.homeId }
         });
@@ -445,7 +452,7 @@ export function HomeProvider({ children }) {
       expiryDate.setDate(expiryDate.getDate() + 7); // Invite code valid for 7 days
 
       // Create the home
-      const homeResult = await client.graphql({
+      const homeResult = await getClient().graphql({
         query: createHomeMutation,
         variables: {
           input: {
@@ -463,7 +470,7 @@ export function HomeProvider({ children }) {
       const newHome = homeResult.data.createHome;
 
       // Create the owner membership
-      const memberResult = await client.graphql({
+      const memberResult = await getClient().graphql({
         query: createHomeMemberMutation,
         variables: {
           input: {
@@ -516,7 +523,7 @@ export function HomeProvider({ children }) {
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + 7); // Invite valid for 7 days
 
-      const result = await client.graphql({
+      const result = await getClient().graphql({
         query: createHomeInviteMutation,
         variables: {
           input: {
@@ -557,7 +564,7 @@ export function HomeProvider({ children }) {
 
     try {
       // Get the home to get current owners list
-      const homeResult = await client.graphql({
+      const homeResult = await getClient().graphql({
         query: getHomeQuery,
         variables: { id: invite.homeId }
       });
@@ -574,7 +581,7 @@ export function HomeProvider({ children }) {
       }
 
       // Create membership
-      const memberResult = await client.graphql({
+      const memberResult = await getClient().graphql({
         query: createHomeMemberMutation,
         variables: {
           input: {
@@ -594,7 +601,7 @@ export function HomeProvider({ children }) {
       });
 
       // Update invite status
-      await client.graphql({
+      await getClient().graphql({
         query: updateHomeInviteMutation,
         variables: {
           input: {
@@ -617,7 +624,7 @@ export function HomeProvider({ children }) {
   // Decline an invitation
   async function declineInvite(inviteId) {
     try {
-      await client.graphql({
+      await getClient().graphql({
         query: updateHomeInviteMutation,
         variables: {
           input: {
@@ -641,7 +648,7 @@ export function HomeProvider({ children }) {
     }
 
     try {
-      const result = await client.graphql({
+      const result = await getClient().graphql({
         query: updateHomeMemberMutation,
         variables: {
           input: {
@@ -680,7 +687,7 @@ export function HomeProvider({ children }) {
     }
 
     try {
-      const result = await client.graphql({
+      const result = await getClient().graphql({
         query: updateHomeMemberMutation,
         variables: {
           input: {
@@ -723,7 +730,7 @@ export function HomeProvider({ children }) {
     }
 
     try {
-      await client.graphql({
+      await getClient().graphql({
         query: deleteHomeMemberMutation,
         variables: {
           input: { id: memberId }
@@ -750,7 +757,7 @@ export function HomeProvider({ children }) {
     }
 
     try {
-      await client.graphql({
+      await getClient().graphql({
         query: deleteHomeMemberMutation,
         variables: {
           input: { id: membership.id }

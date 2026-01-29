@@ -1,6 +1,13 @@
 import { generateClient } from 'aws-amplify/api';
 
-const client = generateClient();
+// Lazy initialize client to ensure Amplify is configured first
+let client = null;
+function getClient() {
+  if (!client) {
+    client = generateClient();
+  }
+  return client;
+}
 
 // ==========================================
 // GRAPHQL QUERIES & MUTATIONS
@@ -411,7 +418,7 @@ export const updateBookingMutation = /* GraphQL */ `
 export async function fetchRooms(homeId) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: listRoomsByHome,
       variables: { homeId }
     });
@@ -425,7 +432,7 @@ export async function fetchRooms(homeId) {
 export async function addRoom(roomData, homeId, homeOwners) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: createRoomMutation,
       variables: {
         input: {
@@ -444,7 +451,7 @@ export async function addRoom(roomData, homeId, homeOwners) {
 
 export async function updateRoom(roomId, roomData) {
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: updateRoomMutation,
       variables: {
         input: {
@@ -462,7 +469,7 @@ export async function updateRoom(roomId, roomData) {
 
 export async function removeRoom(roomId) {
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: deleteRoomMutation,
       variables: {
         input: { id: roomId }
@@ -479,7 +486,7 @@ export async function removeRoom(roomId) {
 export async function fetchTasks(homeId) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: listTasksByHome,
       variables: { homeId }
     });
@@ -493,7 +500,7 @@ export async function fetchTasks(homeId) {
 export async function fetchUserTasks(userId) {
   if (!userId) throw new Error('User ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: listTasksByAssignee,
       variables: { assignedTo: userId }
     });
@@ -507,7 +514,7 @@ export async function fetchUserTasks(userId) {
 export async function addTask(taskData, homeId, homeOwners, createdBy) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: createTaskMutation,
       variables: {
         input: {
@@ -527,7 +534,7 @@ export async function addTask(taskData, homeId, homeOwners, createdBy) {
 
 export async function completeTask(taskId, completedBy) {
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: updateTaskMutation,
       variables: {
         input: {
@@ -547,7 +554,7 @@ export async function completeTask(taskId, completedBy) {
 
 export async function updateTask(taskId, taskData) {
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: updateTaskMutation,
       variables: {
         input: {
@@ -565,7 +572,7 @@ export async function updateTask(taskId, taskData) {
 
 export async function removeTask(taskId) {
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: deleteTaskMutation,
       variables: {
         input: { id: taskId }
@@ -582,7 +589,7 @@ export async function removeTask(taskId) {
 export async function fetchHouseholdTasks(homeId) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: listHouseholdTasksByHome,
       variables: { homeId }
     });
@@ -596,7 +603,7 @@ export async function fetchHouseholdTasks(homeId) {
 export async function addHouseholdTask(taskData, homeId, homeOwners) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: createHouseholdTaskMutation,
       variables: {
         input: {
@@ -615,7 +622,7 @@ export async function addHouseholdTask(taskData, homeId, homeOwners) {
 
 export async function updateHouseholdTask(taskId, taskData) {
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: updateHouseholdTaskMutation,
       variables: {
         input: {
@@ -633,7 +640,7 @@ export async function updateHouseholdTask(taskId, taskData) {
 
 export async function removeHouseholdTask(taskId) {
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: deleteHouseholdTaskMutation,
       variables: {
         input: { id: taskId }
@@ -650,7 +657,7 @@ export async function removeHouseholdTask(taskId) {
 export async function fetchTickets(homeId) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: listTicketsByHome,
       variables: { homeId }
     });
@@ -664,7 +671,7 @@ export async function fetchTickets(homeId) {
 export async function addTicket(ticketData, homeId, homeOwners) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: createTicketMutation,
       variables: {
         input: {
@@ -683,7 +690,7 @@ export async function addTicket(ticketData, homeId, homeOwners) {
 
 export async function updateTicket(ticketId, ticketData) {
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: updateTicketMutation,
       variables: {
         input: {
@@ -703,7 +710,7 @@ export async function updateTicket(ticketId, ticketData) {
 export async function fetchAssets(homeId) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: listAssetsByHome,
       variables: { homeId }
     });
@@ -717,7 +724,7 @@ export async function fetchAssets(homeId) {
 export async function addAsset(assetData, homeId, homeOwners) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: createAssetMutation,
       variables: {
         input: {
@@ -736,7 +743,7 @@ export async function addAsset(assetData, homeId, homeOwners) {
 
 export async function updateAsset(assetId, assetData) {
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: updateAssetMutation,
       variables: {
         input: {
@@ -754,7 +761,7 @@ export async function updateAsset(assetId, assetData) {
 
 export async function removeAsset(assetId) {
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: deleteAssetMutation,
       variables: {
         input: { id: assetId }
@@ -771,7 +778,7 @@ export async function removeAsset(assetId) {
 export async function fetchBookings(homeId) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: listBookingsByHome,
       variables: { homeId }
     });
@@ -785,7 +792,7 @@ export async function fetchBookings(homeId) {
 export async function addBooking(bookingData, homeId, homeOwners) {
   if (!homeId) throw new Error('Home ID is required');
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: createBookingMutation,
       variables: {
         input: {
@@ -804,7 +811,7 @@ export async function addBooking(bookingData, homeId, homeOwners) {
 
 export async function updateBooking(bookingId, bookingData) {
   try {
-    const result = await client.graphql({
+    const result = await getClient().graphql({
       query: updateBookingMutation,
       variables: {
         input: {
