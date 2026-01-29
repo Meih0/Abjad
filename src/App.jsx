@@ -3,11 +3,12 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { motion, AnimatePresence } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { HomeProvider } from './contexts/HomeContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
 import Landing from './pages/Landing';
-import DigitalTwin from './pages/DigitalTwinReal';
+import DigitalTwin from './pages/DigitalTwin';
 import Assets from './pages/Assets';
 import Tasks from './pages/TasksReal';
 import Marketplace from './pages/Marketplace';
@@ -684,9 +685,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router basename="/">
-          <AppContent />
-        </Router>
+        <HomeProvider>
+          <Router basename="/">
+            <AppContent />
+          </Router>
+        </HomeProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
