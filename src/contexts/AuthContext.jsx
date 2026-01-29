@@ -72,6 +72,16 @@ export function AuthProvider({ children }) {
   // Sign in existing user
   async function login(email, password) {
     try {
+      // Check if there's already a signed-in user and sign them out first
+      try {
+        await getCurrentUser();
+        // If we get here, a user is already signed in - sign them out
+        await signOut();
+        setUser(null);
+      } catch {
+        // No user signed in, continue with login
+      }
+
       await signIn({
         username: email,
         password

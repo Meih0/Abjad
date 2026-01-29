@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Mail, Lock, User, Eye, EyeOff, UserPlus } from 'lucide-react';
@@ -12,7 +12,14 @@ const COLORS = {
 
 export default function Signup() {
   const navigate = useNavigate();
-  const { signup, confirmSignup } = useAuth();
+  const { signup, confirmSignup, isAuthenticated, loading: authLoading } = useAuth();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      navigate('/home', { replace: true });
+    }
+  }, [isAuthenticated, authLoading, navigate]);
 
   const [step, setStep] = useState(1); // 1: signup, 2: verify
   const [formData, setFormData] = useState({
@@ -66,6 +73,20 @@ export default function Signup() {
     } finally {
       setLoading(false);
     }
+  }
+
+  // Show loading while checking auth status
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: COLORS.clarity }}>
+        <div className="w-8 h-8 border-4 border-[#005143] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  // Don't render form if already authenticated (redirect will happen via useEffect)
+  if (isAuthenticated) {
+    return null;
   }
 
   return (
