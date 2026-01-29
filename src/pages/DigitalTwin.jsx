@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, X, User, Clock, Plus, CheckCircle, Wrench, Sparkles, ClipboardList,
   Users, UserPlus, DollarSign, ShoppingCart, Baby, AlertCircle, Send, MessageSquare,
-  Calendar, Package, RefreshCw, LogOut
+  Calendar, Package, RefreshCw, LogOut, Pencil, Trash2, RotateCcw, Layout,
+  Move, GripVertical, Sofa, ChefHat, Bed, Bath, Monitor, Car, UtensilsCrossed,
+  Armchair, Dumbbell, Trees, WashingMachine
 } from 'lucide-react';
 
 // Hawaz Brand Colors
@@ -14,6 +16,66 @@ const COLORS = {
   depth: '#121B22',
   strategy: '#F47D42'
 };
+
+// Room types for the palette
+const ROOM_TYPES = [
+  { type: 'living', name: 'Living Room', icon: Sofa, defaultSize: { w: 180, h: 140 }, color: '#005143' },
+  { type: 'kitchen', name: 'Kitchen', icon: UtensilsCrossed, defaultSize: { w: 160, h: 130 }, color: '#F47D42' },
+  { type: 'bedroom', name: 'Bedroom', icon: Bed, defaultSize: { w: 140, h: 120 }, color: '#6366f1' },
+  { type: 'bathroom', name: 'Bathroom', icon: Bath, defaultSize: { w: 100, h: 100 }, color: '#0ea5e9' },
+  { type: 'office', name: 'Office', icon: Monitor, defaultSize: { w: 120, h: 110 }, color: '#8b5cf6' },
+  { type: 'dining', name: 'Dining Room', icon: Armchair, defaultSize: { w: 140, h: 120 }, color: '#ec4899' },
+  { type: 'laundry', name: 'Laundry', icon: WashingMachine, defaultSize: { w: 90, h: 90 }, color: '#14b8a6' },
+  { type: 'garage', name: 'Garage', icon: Car, defaultSize: { w: 180, h: 160 }, color: '#64748b' },
+];
+
+// Preset floor plan layouts
+const PRESET_LAYOUTS = {
+  empty: { name: 'Empty Canvas', rooms: [] },
+  studio: {
+    name: 'Studio Apartment',
+    rooms: [
+      { id: 1, name: 'Living/Bedroom', type: 'living', x: 40, y: 40, width: 200, height: 180, tasks: [] },
+      { id: 2, name: 'Kitchen', type: 'kitchen', x: 260, y: 40, width: 140, height: 100, tasks: [] },
+      { id: 3, name: 'Bathroom', type: 'bathroom', x: 260, y: 160, width: 100, height: 80, tasks: [] },
+    ]
+  },
+  oneBedroom: {
+    name: '1 Bedroom',
+    rooms: [
+      { id: 1, name: 'Living Room', type: 'living', x: 40, y: 40, width: 180, height: 140, tasks: [] },
+      { id: 2, name: 'Kitchen', type: 'kitchen', x: 240, y: 40, width: 140, height: 100, tasks: [] },
+      { id: 3, name: 'Bedroom', type: 'bedroom', x: 40, y: 200, width: 150, height: 130, tasks: [] },
+      { id: 4, name: 'Bathroom', type: 'bathroom', x: 210, y: 200, width: 100, height: 100, tasks: [] },
+    ]
+  },
+  twoBedroom: {
+    name: '2 Bedroom',
+    rooms: [
+      { id: 1, name: 'Living Room', type: 'living', x: 40, y: 40, width: 200, height: 150, tasks: [] },
+      { id: 2, name: 'Kitchen', type: 'kitchen', x: 260, y: 40, width: 150, height: 120, tasks: [] },
+      { id: 3, name: 'Bedroom 1', type: 'bedroom', x: 40, y: 210, width: 140, height: 120, tasks: [] },
+      { id: 4, name: 'Bedroom 2', type: 'bedroom', x: 200, y: 210, width: 140, height: 120, tasks: [] },
+      { id: 5, name: 'Bathroom', type: 'bathroom', x: 360, y: 180, width: 100, height: 100, tasks: [] },
+    ]
+  },
+  familyHome: {
+    name: 'Family Home',
+    rooms: [
+      { id: 1, name: 'Living Room', type: 'living', x: 40, y: 40, width: 180, height: 130, tasks: [] },
+      { id: 2, name: 'Kitchen', type: 'kitchen', x: 240, y: 40, width: 140, height: 100, tasks: [] },
+      { id: 3, name: 'Dining Room', type: 'dining', x: 400, y: 40, width: 120, height: 100, tasks: [] },
+      { id: 4, name: 'Master Bedroom', type: 'bedroom', x: 40, y: 190, width: 150, height: 120, tasks: [] },
+      { id: 5, name: 'Bedroom 2', type: 'bedroom', x: 210, y: 190, width: 130, height: 110, tasks: [] },
+      { id: 6, name: 'Bedroom 3', type: 'bedroom', x: 360, y: 190, width: 130, height: 110, tasks: [] },
+      { id: 7, name: 'Bathroom 1', type: 'bathroom', x: 240, y: 320, width: 90, height: 80, tasks: [] },
+      { id: 8, name: 'Bathroom 2', type: 'bathroom', x: 350, y: 320, width: 90, height: 80, tasks: [] },
+    ]
+  }
+};
+
+const GRID_SIZE = 10; // Grid snap size
+const MIN_ROOM_SIZE = 60; // Minimum room dimension
 
 // Family members and staff
 const INITIAL_MEMBERS = [
@@ -724,6 +786,524 @@ function RoomBottomSheet({ room, members, currentUser, onClose, onAddTask, onCom
   );
 }
 
+// Room Palette Component - drag rooms from here
+function RoomPalette({ onAddRoom }) {
+  return (
+    <div className="bg-white rounded-2xl p-4 shadow-lg h-fit">
+      <h3 className="font-bold text-sm mb-3 flex items-center gap-2" style={{ color: COLORS.depth }}>
+        <GripVertical className="w-4 h-4" />
+        Add Rooms
+      </h3>
+      <div className="space-y-2">
+        {ROOM_TYPES.map((roomType) => {
+          const Icon = roomType.icon;
+          return (
+            <motion.button
+              key={roomType.type}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => onAddRoom(roomType)}
+              className="w-full flex items-center gap-3 p-3 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all cursor-pointer"
+            >
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: roomType.color + '20' }}
+              >
+                <Icon className="w-5 h-5" style={{ color: roomType.color }} />
+              </div>
+              <span className="font-medium text-sm" style={{ color: COLORS.depth }}>
+                {roomType.name}
+              </span>
+              <Plus className="w-4 h-4 ml-auto text-gray-400" />
+            </motion.button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Preset Selector Modal
+function PresetSelector({ onSelect, onClose }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 20 }}
+        className="bg-white rounded-3xl w-full max-w-md mx-4 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: COLORS.innovation }}>
+                <Layout className="w-6 h-6" style={{ color: COLORS.growth }} />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold" style={{ color: COLORS.depth }}>Choose Layout</h2>
+                <p className="text-sm text-gray-500">Start with a template</p>
+              </div>
+            </div>
+            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {Object.entries(PRESET_LAYOUTS).map(([key, preset]) => (
+              <motion.button
+                key={key}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  onSelect(preset.rooms);
+                  onClose();
+                }}
+                className="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all text-left"
+              >
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gray-100">
+                  <Home className="w-6 h-6" style={{ color: COLORS.growth }} />
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold" style={{ color: COLORS.depth }}>{preset.name}</p>
+                  <p className="text-sm text-gray-500">
+                    {preset.rooms.length === 0 ? 'Start from scratch' : `${preset.rooms.length} rooms`}
+                  </p>
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// Floor Plan Editor Component
+function FloorPlanEditor({ rooms, setRooms, onDone }) {
+  const svgRef = useRef(null);
+  const [selectedRoomId, setSelectedRoomId] = useState(null);
+  const [dragState, setDragState] = useState(null); // { roomId, type: 'move' | 'resize', startX, startY, corner }
+  const [showPresets, setShowPresets] = useState(false);
+  const [editingName, setEditingName] = useState(null);
+  const [history, setHistory] = useState([rooms]);
+  const [historyIndex, setHistoryIndex] = useState(0);
+
+  const snapToGrid = (value) => Math.round(value / GRID_SIZE) * GRID_SIZE;
+
+  const saveToHistory = useCallback((newRooms) => {
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(newRooms);
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  }, [history, historyIndex]);
+
+  const undo = () => {
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1);
+      setRooms(history[historyIndex - 1]);
+    }
+  };
+
+  const addRoom = (roomType) => {
+    const newRoom = {
+      id: Date.now(),
+      name: roomType.name,
+      type: roomType.type,
+      x: snapToGrid(50 + Math.random() * 100),
+      y: snapToGrid(50 + Math.random() * 100),
+      width: roomType.defaultSize.w,
+      height: roomType.defaultSize.h,
+      color: roomType.color,
+      tasks: []
+    };
+    const newRooms = [...rooms, newRoom];
+    setRooms(newRooms);
+    saveToHistory(newRooms);
+    setSelectedRoomId(newRoom.id);
+  };
+
+  const deleteRoom = (roomId) => {
+    const newRooms = rooms.filter(r => r.id !== roomId);
+    setRooms(newRooms);
+    saveToHistory(newRooms);
+    setSelectedRoomId(null);
+  };
+
+  const clearAll = () => {
+    setRooms([]);
+    saveToHistory([]);
+    setSelectedRoomId(null);
+  };
+
+  const loadPreset = (presetRooms) => {
+    const roomsWithColors = presetRooms.map(room => ({
+      ...room,
+      id: Date.now() + Math.random() * 1000,
+      color: ROOM_TYPES.find(rt => rt.type === room.type)?.color || COLORS.growth
+    }));
+    setRooms(roomsWithColors);
+    saveToHistory(roomsWithColors);
+    setSelectedRoomId(null);
+  };
+
+  const updateRoomName = (roomId, newName) => {
+    const newRooms = rooms.map(r => r.id === roomId ? { ...r, name: newName } : r);
+    setRooms(newRooms);
+    saveToHistory(newRooms);
+    setEditingName(null);
+  };
+
+  const getMousePosition = (e) => {
+    if (!svgRef.current) return { x: 0, y: 0 };
+    const svg = svgRef.current;
+    const rect = svg.getBoundingClientRect();
+    const viewBox = svg.viewBox.baseVal;
+    return {
+      x: ((e.clientX - rect.left) / rect.width) * viewBox.width,
+      y: ((e.clientY - rect.top) / rect.height) * viewBox.height
+    };
+  };
+
+  const handleMouseDown = (e, roomId, type = 'move', corner = null) => {
+    e.stopPropagation();
+    const pos = getMousePosition(e);
+    const room = rooms.find(r => r.id === roomId);
+    setDragState({
+      roomId,
+      type,
+      corner,
+      startX: pos.x,
+      startY: pos.y,
+      originalRoom: { ...room }
+    });
+    setSelectedRoomId(roomId);
+  };
+
+  const handleMouseMove = useCallback((e) => {
+    if (!dragState) return;
+
+    const pos = getMousePosition(e);
+    const dx = pos.x - dragState.startX;
+    const dy = pos.y - dragState.startY;
+    const room = dragState.originalRoom;
+
+    setRooms(rooms.map(r => {
+      if (r.id !== dragState.roomId) return r;
+
+      if (dragState.type === 'move') {
+        return {
+          ...r,
+          x: snapToGrid(Math.max(25, Math.min(490 - r.width, room.x + dx))),
+          y: snapToGrid(Math.max(25, Math.min(370 - r.height, room.y + dy)))
+        };
+      } else if (dragState.type === 'resize') {
+        let newX = r.x, newY = r.y, newW = r.width, newH = r.height;
+
+        if (dragState.corner.includes('e')) {
+          newW = snapToGrid(Math.max(MIN_ROOM_SIZE, room.width + dx));
+        }
+        if (dragState.corner.includes('w')) {
+          const newWidth = snapToGrid(Math.max(MIN_ROOM_SIZE, room.width - dx));
+          newX = snapToGrid(room.x + room.width - newWidth);
+          newW = newWidth;
+        }
+        if (dragState.corner.includes('s')) {
+          newH = snapToGrid(Math.max(MIN_ROOM_SIZE, room.height + dy));
+        }
+        if (dragState.corner.includes('n')) {
+          const newHeight = snapToGrid(Math.max(MIN_ROOM_SIZE, room.height - dy));
+          newY = snapToGrid(room.y + room.height - newHeight);
+          newH = newHeight;
+        }
+
+        return { ...r, x: newX, y: newY, width: newW, height: newH };
+      }
+      return r;
+    }));
+  }, [dragState, rooms, setRooms]);
+
+  const handleMouseUp = useCallback(() => {
+    if (dragState) {
+      saveToHistory(rooms);
+      setDragState(null);
+    }
+  }, [dragState, rooms, saveToHistory]);
+
+  useEffect(() => {
+    if (dragState) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [dragState, handleMouseMove, handleMouseUp]);
+
+  const selectedRoom = rooms.find(r => r.id === selectedRoomId);
+
+  const getRoomColor = (room) => {
+    return room.color || ROOM_TYPES.find(rt => rt.type === room.type)?.color || COLORS.growth;
+  };
+
+  return (
+    <div className="flex flex-col lg:flex-row gap-4">
+      {/* Left: Room Palette */}
+      <div className="lg:w-56 flex-shrink-0">
+        <RoomPalette onAddRoom={addRoom} />
+      </div>
+
+      {/* Center: Canvas */}
+      <div className="flex-1">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-3xl p-4 shadow-xl"
+        >
+          {/* Toolbar */}
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={undo}
+                disabled={historyIndex === 0}
+                className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                title="Undo"
+              >
+                <RotateCcw className="w-5 h-5" style={{ color: COLORS.depth }} />
+              </button>
+              <button
+                onClick={clearAll}
+                className="p-2 rounded-xl bg-gray-100 hover:bg-red-100 transition-all"
+                title="Clear All"
+              >
+                <Trash2 className="w-5 h-5 text-red-500" />
+              </button>
+              <button
+                onClick={() => setShowPresets(true)}
+                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all"
+              >
+                <Layout className="w-4 h-4" style={{ color: COLORS.depth }} />
+                <span className="text-sm font-medium" style={{ color: COLORS.depth }}>Presets</span>
+              </button>
+            </div>
+            <button
+              onClick={onDone}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-white transition-all active:scale-95"
+              style={{ backgroundColor: COLORS.growth }}
+            >
+              <CheckCircle className="w-5 h-5" />
+              Done
+            </button>
+          </div>
+
+          {/* SVG Canvas */}
+          <div
+            className="rounded-2xl p-2 overflow-hidden cursor-crosshair"
+            style={{ backgroundColor: COLORS.clarity }}
+          >
+            <svg
+              ref={svgRef}
+              viewBox="0 0 550 420"
+              className="w-full max-w-4xl mx-auto"
+              style={{ aspectRatio: '550/420', maxHeight: '55vh' }}
+              onClick={() => setSelectedRoomId(null)}
+            >
+              {/* Grid pattern */}
+              <defs>
+                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                  <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#e5e7eb" strokeWidth="0.5" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+
+              {/* Floor boundary */}
+              <rect
+                x="20"
+                y="20"
+                width="510"
+                height="380"
+                fill="white"
+                stroke={COLORS.depth}
+                strokeWidth="3"
+                rx="12"
+                strokeDasharray="10 5"
+              />
+
+              {/* Empty state */}
+              {rooms.length === 0 && (
+                <text
+                  x="275"
+                  y="210"
+                  textAnchor="middle"
+                  fill="#9ca3af"
+                  fontSize="16"
+                  fontWeight="500"
+                >
+                  Click a room type to add it here
+                </text>
+              )}
+
+              {/* Rooms */}
+              {rooms.map((room) => {
+                const isSelected = selectedRoomId === room.id;
+                const roomColor = getRoomColor(room);
+
+                return (
+                  <g key={room.id}>
+                    {/* Room rectangle */}
+                    <rect
+                      x={room.x}
+                      y={room.y}
+                      width={room.width}
+                      height={room.height}
+                      fill={roomColor}
+                      stroke={isSelected ? COLORS.innovation : COLORS.depth}
+                      strokeWidth={isSelected ? 4 : 2}
+                      rx="8"
+                      className="cursor-move"
+                      onMouseDown={(e) => handleMouseDown(e, room.id, 'move')}
+                      style={{
+                        filter: isSelected ? `drop-shadow(0 0 8px ${COLORS.innovation})` : 'none'
+                      }}
+                    />
+
+                    {/* Room name */}
+                    <text
+                      x={room.x + room.width / 2}
+                      y={room.y + room.height / 2}
+                      textAnchor="middle"
+                      fill="#ffffff"
+                      fontSize="13"
+                      fontWeight="bold"
+                      className="pointer-events-none select-none"
+                    >
+                      {room.name}
+                    </text>
+
+                    {/* Resize handles (when selected) */}
+                    {isSelected && (
+                      <>
+                        {/* Corner handles */}
+                        {['nw', 'ne', 'sw', 'se'].map((corner) => {
+                          const cx = corner.includes('w') ? room.x : room.x + room.width;
+                          const cy = corner.includes('n') ? room.y : room.y + room.height;
+                          return (
+                            <circle
+                              key={corner}
+                              cx={cx}
+                              cy={cy}
+                              r="8"
+                              fill={COLORS.innovation}
+                              stroke="white"
+                              strokeWidth="2"
+                              className="cursor-nwse-resize"
+                              onMouseDown={(e) => handleMouseDown(e, room.id, 'resize', corner)}
+                            />
+                          );
+                        })}
+                        {/* Delete button */}
+                        <g
+                          className="cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteRoom(room.id);
+                          }}
+                        >
+                          <circle
+                            cx={room.x + room.width - 12}
+                            cy={room.y + 12}
+                            r="12"
+                            fill="#ef4444"
+                          />
+                          <text
+                            x={room.x + room.width - 12}
+                            y={room.y + 17}
+                            textAnchor="middle"
+                            fill="white"
+                            fontSize="14"
+                            fontWeight="bold"
+                          >
+                            ×
+                          </text>
+                        </g>
+                      </>
+                    )}
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+
+          {/* Room info bar */}
+          {selectedRoom && (
+            <div className="mt-4 p-3 bg-gray-50 rounded-xl flex items-center gap-4 flex-wrap">
+              <div className="flex items-center gap-2">
+                <Move className="w-4 h-4 text-gray-500" />
+                <span className="text-sm text-gray-600">
+                  {Math.round(selectedRoom.width)} × {Math.round(selectedRoom.height)}
+                </span>
+              </div>
+              <div className="flex-1">
+                {editingName === selectedRoom.id ? (
+                  <input
+                    type="text"
+                    defaultValue={selectedRoom.name}
+                    autoFocus
+                    className="px-2 py-1 border-2 border-green-400 rounded-lg text-sm w-full max-w-[200px]"
+                    onBlur={(e) => updateRoomName(selectedRoom.id, e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') updateRoomName(selectedRoom.id, e.target.value);
+                      if (e.key === 'Escape') setEditingName(null);
+                    }}
+                  />
+                ) : (
+                  <button
+                    onClick={() => setEditingName(selectedRoom.id)}
+                    className="flex items-center gap-2 text-sm font-medium hover:text-green-600 transition-colors"
+                    style={{ color: COLORS.depth }}
+                  >
+                    <Pencil className="w-3 h-3" />
+                    {selectedRoom.name}
+                  </button>
+                )}
+              </div>
+              <button
+                onClick={() => deleteRoom(selectedRoom.id)}
+                className="flex items-center gap-1 px-3 py-1 rounded-lg bg-red-100 text-red-600 text-sm font-medium hover:bg-red-200 transition-all"
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete
+              </button>
+            </div>
+          )}
+
+          <p className="text-xs text-gray-500 mt-3 text-center">
+            Click room to select • Drag to move • Drag corners to resize • Double-click name to edit
+          </p>
+        </motion.div>
+      </div>
+
+      {/* Preset Modal */}
+      <AnimatePresence>
+        {showPresets && (
+          <PresetSelector
+            onSelect={loadPreset}
+            onClose={() => setShowPresets(false)}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function DigitalTwin() {
   const [currentUser, setCurrentUser] = useState(INITIAL_MEMBERS[0]);
   const [members] = useState(INITIAL_MEMBERS);
@@ -733,6 +1313,7 @@ export default function DigitalTwin() {
   const [tickets, setTickets] = useState(INITIAL_TICKETS);
   const [showTicketModal, setShowTicketModal] = useState(false);
   const [activeTab, setActiveTab] = useState('rooms');
+  const [editMode, setEditMode] = useState(false);
 
   const addTaskToRoom = (roomId, taskData) => {
     setRooms(rooms.map(room => {
@@ -930,106 +1511,148 @@ export default function DigitalTwin() {
 
       {activeTab === 'rooms' && (
         <>
-          {/* SVG Floor Plan */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-3xl p-6 shadow-xl"
-          >
-            <div className="rounded-2xl p-4 overflow-auto" style={{ backgroundColor: COLORS.clarity }}>
-              <svg
-                viewBox="0 0 550 400"
-                className="w-full max-w-3xl mx-auto"
-                style={{ aspectRatio: '550/400', maxHeight: '60vh' }}
-              >
-                {/* Floor boundary */}
-                <rect
-                  x="20"
-                  y="20"
-                  width="510"
-                  height="360"
-                  fill="none"
-                  stroke={COLORS.depth}
-                  strokeWidth="3"
-                  rx="12"
-                />
+          {editMode ? (
+            /* Edit Mode - Floor Plan Builder */
+            <FloorPlanEditor
+              rooms={rooms}
+              setRooms={setRooms}
+              onDone={() => setEditMode(false)}
+            />
+          ) : (
+            /* View Mode - Interactive Floor Plan */
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-3xl p-6 shadow-xl"
+            >
+              {/* Edit Button */}
+              <div className="flex justify-end mb-4">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setEditMode(true)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all shadow-md"
+                  style={{ backgroundColor: COLORS.innovation, color: COLORS.growth }}
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Floor Plan
+                </motion.button>
+              </div>
 
-                {/* Rooms */}
-                {rooms.map((room) => {
-                  const activeTasks = currentUser.type === 'staff'
-                    ? room.tasks.filter(t => t.assignedTo === currentUser.id && t.status !== 'completed').length
-                    : room.tasks.filter(t => t.status !== 'completed').length;
+              <div className="rounded-2xl p-4 overflow-auto" style={{ backgroundColor: COLORS.clarity }}>
+                <svg
+                  viewBox="0 0 550 400"
+                  className="w-full max-w-3xl mx-auto"
+                  style={{ aspectRatio: '550/400', maxHeight: '60vh' }}
+                >
+                  {/* Floor boundary */}
+                  <rect
+                    x="20"
+                    y="20"
+                    width="510"
+                    height="360"
+                    fill="none"
+                    stroke={COLORS.depth}
+                    strokeWidth="3"
+                    rx="12"
+                  />
 
-                  return (
-                    <g key={room.id}>
-                      <rect
-                        x={room.x}
-                        y={room.y}
-                        width={room.width}
-                        height={room.height}
-                        fill={getRoomColor(room)}
-                        stroke={COLORS.depth}
-                        strokeWidth="2"
-                        rx="12"
-                        className="cursor-pointer hover:opacity-80 active:opacity-60 transition-opacity"
-                        onClick={() => setSelectedRoom(room)}
-                        style={{
-                          filter: activeTasks > 0 ? `drop-shadow(0 0 12px ${COLORS.innovation})` : 'none'
-                        }}
-                      />
-                      <text
-                        x={room.x + room.width / 2}
-                        y={room.y + room.height / 2 - 5}
-                        textAnchor="middle"
-                        fill={activeTasks > 0 ? '#ffffff' : COLORS.depth}
-                        className="pointer-events-none text-sm md:text-base font-bold"
-                        style={{ fontSize: '0.875rem' }}
-                      >
-                        {room.name}
-                      </text>
-                      <text
-                        x={room.x + room.width / 2}
-                        y={room.y + room.height / 2 + 15}
-                        textAnchor="middle"
-                        fill={activeTasks > 0 ? '#ffffff' : '#9ca3af'}
-                        className="pointer-events-none text-xs md:text-sm font-semibold"
-                        style={{ fontSize: '0.75rem' }}
-                      >
-                        {activeTasks > 0 ? `${activeTasks} ${activeTasks === 1 ? 'task' : 'tasks'}` : 'No tasks'}
-                      </text>
-                      {activeTasks > 0 && (
-                        <>
-                          <circle
-                            cx={room.x + room.width - 20}
-                            cy={room.y + 20}
-                            r="14"
-                            fill={COLORS.innovation}
-                            className="pointer-events-none"
-                          />
-                          <text
-                            x={room.x + room.width - 20}
-                            y={room.y + 26}
-                            textAnchor="middle"
-                            fill={COLORS.growth}
-                            fontSize="13"
-                            fontWeight="bold"
-                            className="pointer-events-none"
-                          >
-                            {activeTasks}
-                          </text>
-                        </>
-                      )}
-                    </g>
-                  );
-                })}
-              </svg>
-            </div>
+                  {/* Empty state */}
+                  {rooms.length === 0 && (
+                    <text
+                      x="275"
+                      y="200"
+                      textAnchor="middle"
+                      fill="#9ca3af"
+                      fontSize="16"
+                      fontWeight="500"
+                    >
+                      No rooms yet. Click "Edit Floor Plan" to add rooms.
+                    </text>
+                  )}
 
-            <p className="text-sm text-gray-600 mt-6 text-center font-medium">
-              Click on any room to view and manage tasks
-              {currentUser.type === 'staff' && ' assigned to you'}
-            </p>
-          </motion.div>
+                  {/* Rooms */}
+                  {rooms.map((room) => {
+                    const activeTasks = currentUser.type === 'staff'
+                      ? room.tasks.filter(t => t.assignedTo === currentUser.id && t.status !== 'completed').length
+                      : room.tasks.filter(t => t.status !== 'completed').length;
+
+                    const roomColor = room.color || ROOM_TYPES.find(rt => rt.type === room.type)?.color || getRoomColor(room);
+
+                    return (
+                      <g key={room.id}>
+                        <rect
+                          x={room.x}
+                          y={room.y}
+                          width={room.width}
+                          height={room.height}
+                          fill={activeTasks > 0 ? roomColor : '#e5e7eb'}
+                          stroke={COLORS.depth}
+                          strokeWidth="2"
+                          rx="12"
+                          className="cursor-pointer hover:opacity-80 active:opacity-60 transition-opacity"
+                          onClick={() => setSelectedRoom(room)}
+                          style={{
+                            filter: activeTasks > 0 ? `drop-shadow(0 0 12px ${COLORS.innovation})` : 'none'
+                          }}
+                        />
+                        <text
+                          x={room.x + room.width / 2}
+                          y={room.y + room.height / 2 - 5}
+                          textAnchor="middle"
+                          fill={activeTasks > 0 ? '#ffffff' : COLORS.depth}
+                          className="pointer-events-none text-sm md:text-base font-bold"
+                          style={{ fontSize: '0.875rem' }}
+                        >
+                          {room.name}
+                        </text>
+                        <text
+                          x={room.x + room.width / 2}
+                          y={room.y + room.height / 2 + 15}
+                          textAnchor="middle"
+                          fill={activeTasks > 0 ? '#ffffff' : '#9ca3af'}
+                          className="pointer-events-none text-xs md:text-sm font-semibold"
+                          style={{ fontSize: '0.75rem' }}
+                        >
+                          {activeTasks > 0 ? `${activeTasks} ${activeTasks === 1 ? 'task' : 'tasks'}` : 'No tasks'}
+                        </text>
+                        {activeTasks > 0 && (
+                          <>
+                            <circle
+                              cx={room.x + room.width - 20}
+                              cy={room.y + 20}
+                              r="14"
+                              fill={COLORS.innovation}
+                              className="pointer-events-none"
+                            />
+                            <text
+                              x={room.x + room.width - 20}
+                              y={room.y + 26}
+                              textAnchor="middle"
+                              fill={COLORS.growth}
+                              fontSize="13"
+                              fontWeight="bold"
+                              className="pointer-events-none"
+                            >
+                              {activeTasks}
+                            </text>
+                          </>
+                        )}
+                      </g>
+                    );
+                  })}
+                </svg>
+              </div>
+
+              <p className="text-sm text-gray-600 mt-6 text-center font-medium">
+                {rooms.length > 0 ? (
+                  <>Click on any room to view and manage tasks{currentUser.type === 'staff' && ' assigned to you'}</>
+                ) : (
+                  <>Start by adding rooms to your floor plan</>
+                )}
+              </p>
+            </motion.div>
+          )}
         </>
       )}
 
